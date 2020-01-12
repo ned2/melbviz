@@ -1,0 +1,4 @@
+* How does the total footfalls change over the years in the dataset?
+* How does the number of sensors change over the years in the dataset?
+* which are the most/least trafficked sensor in year XXXX/all time?
+* how has traffic through sensor X changed over the years? 
