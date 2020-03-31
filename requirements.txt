@@ -6,13 +6,13 @@
 #
 attrs==19.3.0             # via jsonschema
 backcall==0.1.0           # via ipython
-bleach==3.1.0             # via nbconvert
+bleach==3.1.4             # via nbconvert
 click==7.0                # via flask
 cycler==0.10.0            # via matplotlib
 dash-core-components==1.6.0  # via dash
 dash-html-components==1.0.2  # via dash
 dash-table==4.5.1         # via dash
-dash==1.7.0
+dash==1.7.0               # via -r requirements.in
 dash_renderer==1.2.2      # via dash
 decorator==4.4.1          # via ipython, traitlets
 defusedxml==0.6.0         # via nbconvert
@@ -31,16 +31,16 @@ jsonschema==3.2.0         # via jupyterlab-server, nbformat
 jupyter-client==5.3.4     # via ipykernel, notebook
 jupyter-core==4.6.1       # via jupyter-client, nbconvert, nbformat, notebook
 jupyterlab-server==1.0.6  # via jupyterlab
-jupyterlab==1.2.4
+jupyterlab==1.2.4         # via -r requirements.in
 kiwisolver==1.1.0         # via matplotlib
 markupsafe==1.1.1         # via jinja2
-matplotlib==3.1.2
+matplotlib==3.1.2         # via -r requirements.in
 mistune==0.8.4            # via nbconvert
 nbconvert==5.6.1          # via notebook
 nbformat==5.0.3           # via nbconvert, notebook
 notebook==6.0.2           # via jupyterlab, jupyterlab-server
 numpy==1.18.1             # via matplotlib, pandas
-pandas==0.25.3
+pandas==0.25.3            # via -r requirements.in
 pandocfilters==1.4.2      # via nbconvert
 parso==0.5.2              # via jedi
 pexpect==4.7.0            # via ipython
