@@ -16,6 +16,14 @@ def load_and_clean_pedestrian_data(path=config.PEDESTRIAN_DATA_PATH):
             "month": pd.to_datetime(df["Month"], format="%B").dt.month,
         }
     )
+    df["datetime_flat_year"] = pd.to_datetime(
+        {
+            "day": df["Mdate"],
+            "year": 2000,
+            "hour": df["Time"],
+            "month": pd.to_datetime(df["Month"], format="%B").dt.month,
+        }
+    )
     return df
 
 
