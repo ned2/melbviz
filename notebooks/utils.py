@@ -26,28 +26,27 @@ def load_and_clean_pedestrian_data(path):
     return df
 
 
-def issequence(obj):
+def is_sequence(obj):
     if isinstance(obj, str):
         return False
     return isinstance(obj, collections.abc.Sequence)
 
 
+#@functools.lru_cache()
 def filter_foot_df(df, year=None, month=None, sensor=None):
     """Filter a pedestrian footfalls DataFrame"""
-    if year is not None:
-        if not issequence(year):
+    if year:
+        if not is_sequence(year):
             year = [year]
         df = df[df["Year"].isin(set(year))]
-    if month is not None:
-        if not issequence(month):
+    if month:
+        if not is_sequence(month):
             month = [month]
         df = df[df["Month"].isin(set(month))]
-    if sensor is not None:
-        if not issequence(sensor):
+    if sensor:
+        if not is_sequence(sensor):
             sensor = [sensor]
         df = df[df["Sensor_Name"].isin(set(sensor))]
-#    if len(df) == 0:
-#        raise Exception("No matching records")
     return df
 
 

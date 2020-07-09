@@ -2,25 +2,26 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
-from utils import filter_foot_df
+from utils import filter_foot_df, is_sequence
 
 
-def plot_sensor_counts(df, year=None, month=None):
+def plot_sensor_counts(df, year=None, month=None, sensor=None, **kwargs):
     """Make a bar chart for total footfals for each sensor"""
-    df = filter_foot_df(df, year=year)
+    df = filter_foot_df(df, year=year, month=month, sensor=sensor)
     title = "Total footfalls by sensor"
-    total = df.groupby("Sensor_Name")["Hourly_Counts"].sum().sort_values()
-    return px.bar(y=total.index, x=total, title=title, orientation='h', height=2000, width=1000)
+    total_df = df.groupby("Sensor_Name")["Hourly_Counts"].sum().sort_values().reset_index(name="Total Counts")
+    kwargs["height"] = 20*len(total_df)
+    return px.bar(total_df, x="Total Counts", y="Sensor_Name", title=title, orientation='h', **kwargs)
 
 
-def plot_month_counts(df, year=None, sensor=None):
+def plot_month_counts(df, year=None, sensor=None, **kwargs):
     df = filter_foot_df(df, year=year, sensor=sensor)
-    if sensor is None:
-        group_cols = ["Month"]
-        color = None
-    else:
+    if is_sequence(sensor) and len(sensor) > 1:
         group_cols = ["Month", "Sensor_Name"]
         color = "Sensor_Name"
+    else:
+        group_cols = ["Month"]
+        color = None
     month_df = df.groupby(group_cols)["Hourly_Counts"].sum().reset_index()
     month_df["month_num"] = pd.to_datetime(month_df.Month, format="%B").dt.month
     return px.bar(
@@ -29,34 +30,8 @@ def plot_month_counts(df, year=None, sensor=None):
         y="Hourly_Counts",
         barmode="group",
         color=color,
+        **kwargs
     )
-
-
-def plot_stacked_sensors(df, year=None, sensor=None, normalised=True):
-    df = filter_foot_df(df, year=year, sensor=sensor)
-    sensor_years_s = df.groupby(["Sensor_Name", "Year"])["Hourly_Counts"].sum()
-    sensor_dfs = [
-        (sensor, dfx.reset_index("Sensor_Name"))
-        for sensor, dfx in sensor_years_s.groupby(level=0)
-    ]
-
-    fig = go.Figure()
-    for sensor, df in sensor_dfs:
-        fig.add_trace(
-            go.Scatter(
-                x=df.index,
-                y=df["Hourly_Counts"],
-                # mode='lines',
-                name=sensor,
-                stackgroup="one",
-                groupnorm="percent" if normalised else "",
-            )
-        )
-
-    fig.update_layout(
-        width=1500, height=1200, title="Proportion of footfalls for each sensor by year"
-    )
-    return fig
 
 
 def plot_sensors(
@@ -138,6 +113,33 @@ def plot_years(
     return fig
 
 
+def plot_stacked_sensors(df, year=None, sensor=None, normalised=True):
+    df = filter_foot_df(df, year=year, sensor=sensor)
+    sensor_years_s = df.groupby(["Sensor_Name", "Year"])["Hourly_Counts"].sum()
+    sensor_dfs = [
+        (sensor, dfx.reset_index("Sensor_Name"))
+        for sensor, dfx in sensor_years_s.groupby(level=0)
+    ]
+
+    fig = go.Figure()
+    for sensor, df in sensor_dfs:
+        fig.add_trace(
+            go.Scatter(
+                x=df.index,
+                y=df["Hourly_Counts"],
+                # mode='lines',
+                name=sensor,
+                stackgroup="one",
+                groupnorm="percent" if normalised else "",
+            )
+        )
+
+    fig.update_layout(
+        width=1500, height=1200, title="Proportion of footfalls for each sensor by year"
+    )
+    return fig
+
+
 # don't think we need this
 def make_line_plot(df, years=None, sensors=None, normalised=True):
     if years is not None:
@@ -160,5 +162,4 @@ def make_line_plot(df, years=None, sensors=None, normalised=True):
         ))
 
     fig.update_layout(clickmode="event+select", width=1500, height=1000, title="Proportion of footfalls for each sensor by year")
-    #fig.update_yaxes(hoverformat=".2")
     return fig
