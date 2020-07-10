@@ -58,3 +58,12 @@ def display_output(func):
         display(result)
         return result
     return wrapped_display_output
+
+
+def geocode_sensors(df):
+    """Get a DataFrame of Sensor_Name,lat,long"""
+    locations_df = pd.DataFrame({"Sensor_Name":df["Sensor_Name"].unique()})
+    location_strings = locations_df["Sensor_Name"] + " Melbourne, Australia"
+    lat_lngs = [geocoder.google(loc, key=GOOGLE_GEO_KEY).latlng for loc in location_strings]
+    lat_lngs_df = pd.DataFrame(lat_lngs, columns=['lat', 'long'])
+    return pd.concat([locations_df, lat_lngs_df], axis=1)
