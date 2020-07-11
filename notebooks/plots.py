@@ -12,22 +12,18 @@ px.set_mapbox_access_token(MAPBOX_KEY)
 def plot_sensor_counts(df, year=None, month=None, sensor=None, **kwargs):
     """Make a bar chart for total footfals for each sensor"""
     df = filter_foot_df(df, year=year, month=month, sensor=sensor)
-    title = "Total footfalls by sensor"
     total_df = (
         df.groupby("Sensor_Name")["Hourly_Counts"]
         .sum()
         .sort_values()
         .reset_index(name="Total Counts")
     )
-    kwargs["height"] = 20 * len(total_df)
-    return px.bar(
-        total_df,
-        x="Total Counts",
-        y="Sensor_Name",
-        title=title,
-        orientation="h",
-        **kwargs,
+    kwargs["height"] = 18 * len(total_df)
+    fig = px.bar(
+        total_df, x="Total Counts", y="Sensor_Name", orientation="h", **kwargs,
     )
+    fig.update_layout(yaxis_title=None, xaxis_side="top")
+    return fig
 
 
 def plot_month_counts(df, year=None, sensor=None, **kwargs):
@@ -40,7 +36,7 @@ def plot_month_counts(df, year=None, sensor=None, **kwargs):
         color = None
     month_df = df.groupby(group_cols)["Hourly_Counts"].sum().reset_index()
     month_df["month_num"] = pd.to_datetime(month_df.Month, format="%B").dt.month
-    return px.bar(
+    fig = px.bar(
         month_df.sort_values(by="month_num"),
         x="Month",
         y="Hourly_Counts",
@@ -48,6 +44,8 @@ def plot_month_counts(df, year=None, sensor=None, **kwargs):
         color=color,
         **kwargs,
     )
+    fig.update_layout(yaxis_title="Total Counts", xaxis_title=None)
+    return fig
 
 
 def plot_sensors(
@@ -70,15 +68,15 @@ def plot_sensors(
         return None
 
     title = f"Hourly Footfall Counts by Sensor"
-    if month or year:
-        title += f" for {' '.join([month, str(year)])}"
+    title_filters = [str(fil) for fil in (month, year) if fil is not None]
+    if title_filters:
+        title += f" for {' '.join(title_filters)}"
 
     target_sensors = (
         df.groupby("Sensor_Name")["Hourly_Counts"].sum().sort_values(ascending=False)
     )[:limit]
     df = filter_foot_df(df, sensor=target_sensors.index)
 
-    # make the figure with Plotly Express
     fig = px.line(
         df,
         y="Hourly_Counts",
@@ -90,7 +88,6 @@ def plot_sensors(
         **kwargs,
     )
 
-    # update figure produced by Plotly Express with fine-tuning
     fig.update_yaxes(
         matches=None if same_yscale else "y",
         showgrid=False,
