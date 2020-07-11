@@ -2,21 +2,37 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
-from utils import filter_foot_df, is_sequence
+from config import MAPBOX_KEY
+from utils import filter_foot_df, is_value
+
+
+px.set_mapbox_access_token(MAPBOX_KEY)
 
 
 def plot_sensor_counts(df, year=None, month=None, sensor=None, **kwargs):
     """Make a bar chart for total footfals for each sensor"""
     df = filter_foot_df(df, year=year, month=month, sensor=sensor)
     title = "Total footfalls by sensor"
-    total_df = df.groupby("Sensor_Name")["Hourly_Counts"].sum().sort_values().reset_index(name="Total Counts")
-    kwargs["height"] = 20*len(total_df)
-    return px.bar(total_df, x="Total Counts", y="Sensor_Name", title=title, orientation='h', **kwargs)
+    total_df = (
+        df.groupby("Sensor_Name")["Hourly_Counts"]
+        .sum()
+        .sort_values()
+        .reset_index(name="Total Counts")
+    )
+    kwargs["height"] = 20 * len(total_df)
+    return px.bar(
+        total_df,
+        x="Total Counts",
+        y="Sensor_Name",
+        title=title,
+        orientation="h",
+        **kwargs,
+    )
 
 
 def plot_month_counts(df, year=None, sensor=None, **kwargs):
     df = filter_foot_df(df, year=year, sensor=sensor)
-    if is_sequence(sensor) and len(sensor) > 1:
+    if not is_value(sensor) and len(sensor) > 1:
         group_cols = ["Month", "Sensor_Name"]
         color = "Sensor_Name"
     else:
@@ -30,13 +46,25 @@ def plot_month_counts(df, year=None, sensor=None, **kwargs):
         y="Hourly_Counts",
         barmode="group",
         color=color,
-        **kwargs
+        **kwargs,
     )
 
 
 def plot_sensors(
-    df, sensor=None, year=None, month=None, same_yscale=False, row_height=100, **kwargs
+    df,
+    sensor=None,
+    year=None,
+    month=None,
+    same_yscale=False,
+    row_height=150,
+    limit=10,
+    **kwargs,
 ):
+    if not isinstance(sensor, str):
+        # Too many plots doesn't make sense visually and also plotly express
+        # does not like it.
+        sensor = list(sensor)[:limit]
+
     df = filter_foot_df(df, year=year, month=month, sensor=sensor)
     if len(df) == 0:
         return None
@@ -45,9 +73,10 @@ def plot_sensors(
     if month or year:
         title += f" for {' '.join([month, str(year)])}"
 
-    sensor_order = (
+    target_sensors = (
         df.groupby("Sensor_Name")["Hourly_Counts"].sum().sort_values(ascending=False)
-    )
+    )[:limit]
+    df = filter_foot_df(df, sensor=target_sensors.index)
 
     # make the figure with Plotly Express
     fig = px.line(
@@ -56,8 +85,8 @@ def plot_sensors(
         x="datetime",
         facet_row="Sensor_Name",
         title=title,
-        category_orders={"Sensor_Name": list(sensor_order.index)},
-        height=len(sensor_order) * row_height,
+        category_orders={"Sensor_Name": list(target_sensors.index)},
+        height=len(target_sensors) * row_height,
         **kwargs,
     )
 
@@ -84,7 +113,7 @@ def plot_years(
     title = f"{sensor} Hourly Footfall Counts by year"
     if month is not None:
         title += f" for {month}"
-        
+
     # prep additional data required
     year_counts = df.groupby("Year")["Hourly_Counts"].sum().sort_index(ascending=False)
 
@@ -97,7 +126,7 @@ def plot_years(
         title=title,
         category_orders={"Year": list(year_counts.index)},
         height=len(year_counts) * row_height,
-        **kwargs
+        **kwargs,
     )
 
     # update figure produced by Plotly Express with fine-tuning
@@ -111,6 +140,33 @@ def plot_years(
     fig.for_each_annotation(lambda a: a.update(textangle=0, text=a.text.split("=")[-1]))
     fig.update_layout(title_x=0.5)
     return fig
+
+
+def plot_scatter_map(df, year=None, month=None, sensor=None, **kwargs):
+    df = filter_foot_df(df, year=year, month=None, sensor=sensor)
+    sensor_totals_df = (
+        df.groupby("Sensor_Name")
+        .agg(
+            {
+                "Hourly_Counts": sum,
+                "latitude": lambda x: x.iloc[0],
+                "longitude": lambda x: x.iloc[0],
+            }
+        )
+        .reset_index()
+    )
+    return px.scatter_mapbox(
+        sensor_totals_df,
+        lat="latitude",
+        lon="longitude",
+        # color="peak_hour",
+        size="Hourly_Counts",
+        text="Sensor_Name",
+        color_continuous_scale=px.colors.cyclical.IceFire,
+        size_max=15,
+        zoom=13,
+        **kwargs,
+    )
 
 
 def plot_stacked_sensors(df, year=None, sensor=None, normalised=True):
@@ -147,19 +203,30 @@ def make_line_plot(df, years=None, sensors=None, normalised=True):
     if sensors is not None:
         df = df[df["Sensor_Name"].isin(sensors)]
     sensor_years_s = df.groupby(["Sensor_Name", "Year"])["Hourly_Counts"].sum()
-    sensor_dfs = [(sensor, dfx.reset_index("Sensor_Name")) for sensor, dfx in sensor_years_s.groupby(level=0)]
+    sensor_dfs = [
+        (sensor, dfx.reset_index("Sensor_Name"))
+        for sensor, dfx in sensor_years_s.groupby(level=0)
+    ]
 
     fig = go.Figure()
-    for sensor, df in sensor_dfs:   
-        fig.add_trace(go.Scatter(
-            mode="lines+markers",
-            x=df.index, y=df["Hourly_Counts"],
-            name=sensor,
-            hovertemplate = "%{y:,}",
-            # don't truncate the hover text
-            hoverlabel={"namelength":-1},
-            #line=go.scatter.Line(color="gray"),
-        ))
+    for sensor, df in sensor_dfs:
+        fig.add_trace(
+            go.Scatter(
+                mode="lines+markers",
+                x=df.index,
+                y=df["Hourly_Counts"],
+                name=sensor,
+                hovertemplate="%{y:,}",
+                # don't truncate the hover text
+                hoverlabel={"namelength": -1},
+                # line=go.scatter.Line(color="gray"),
+            )
+        )
 
-    fig.update_layout(clickmode="event+select", width=1500, height=1000, title="Proportion of footfalls for each sensor by year")
+    fig.update_layout(
+        clickmode="event+select",
+        width=1500,
+        height=1000,
+        title="Proportion of footfalls for each sensor by year",
+    )
     return fig
