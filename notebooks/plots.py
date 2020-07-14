@@ -160,7 +160,7 @@ def plot_scatter_map(df, year=None, month=None, sensor=None, **kwargs):
         size="Hourly_Counts",
         text="Sensor_Name",
         color_continuous_scale=px.colors.cyclical.IceFire,
-        size_max=15,
+        size_max=20,
         zoom=13,
         **kwargs,
     )
