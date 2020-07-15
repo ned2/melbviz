@@ -44,7 +44,18 @@ def plot_month_counts(df, year=None, sensor=None, **kwargs):
         color=color,
         **kwargs,
     )
-    fig.update_layout(yaxis_title="Total Counts", xaxis_title=None)
+    fig.update_layout(
+        yaxis_title="Total Counts",
+        xaxis_title=None,
+        legend=dict(
+            title_text="",
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1,
+        ),
+    )
     return fig
 
 
