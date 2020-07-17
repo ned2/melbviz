@@ -1,3 +1,4 @@
+import calendar
 import collections
 import functools
 import numbers
@@ -68,11 +69,20 @@ def display_output(func):
     return wrapped_display_output
 
 
+def sort_months(months):
+    """Sort a sequence of months by their calendar order"""
+    month_ref = list(calendar.month_name)[1:]
+    return sorted(months, key=lambda month: month_ref.index(month))
+
+
 def geocode_sensors(df):
     """Get a DataFrame of Sensor_Name,lat,long
     
     This is done by appending "Melbourne, Australia" to sensor names and sending
     these location strings to Google Geocoding API to be geocoded.
+
+    Note: Melbourne City Council provides a separate dataset of sensor locations
+    so this is probably not needed.
     """
     locations_df = pd.DataFrame({"Sensor_Name": df["Sensor_Name"].unique()})
     location_strings = locations_df["Sensor_Name"] + " Melbourne, Australia"
