@@ -1,20 +1,8 @@
 import calendar
-import collections
 import functools
+import numbers
 
 import pandas as pd
-
-
-def display_output(func):
-    """Decorator for displaying the result of a function in Jupyter"""
-
-    @functools.wraps(func)
-    def wrapped_display_output(*args, **kwargs):
-        result = func(*args, **kwargs)
-        display(result)
-        return result
-
-    return wrapped_display_output
 
 
 def display_output(func):
@@ -33,6 +21,11 @@ def sort_months(months):
     """Sort a sequence of months by their calendar order"""
     month_ref = list(calendar.month_name)[1:]
     return sorted(months, key=lambda month: month_ref.index(month))
+
+
+def is_value(obj):
+    """Check if an object is a string or numeric value"""
+    return isinstance(obj, str) or isinstance(obj, numbers.Number)
 
 
 def geocode_sensors(df):

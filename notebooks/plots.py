@@ -3,15 +3,14 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 from config import MAPBOX_KEY
-from utils import filter_foot_df, is_value
+from utils import is_value
 
 
 px.set_mapbox_access_token(MAPBOX_KEY)
 
 
-def plot_sensor_counts(df, year=None, month=None, sensor=None, **kwargs):
+def plot_sensor_counts(df, **kwargs):
     """Make a bar chart for total footfals for each sensor"""
-    df = filter_foot_df(df, year=year, month=month, sensor=sensor)
     total_df = (
         df.groupby("Sensor_Name")["Hourly_Counts"]
         .sum()
@@ -26,14 +25,13 @@ def plot_sensor_counts(df, year=None, month=None, sensor=None, **kwargs):
     return fig
 
 
-def plot_month_counts(df, year=None, sensor=None, **kwargs):
-    df = filter_foot_df(df, year=year, sensor=sensor)
-    if not is_value(sensor) and len(sensor) > 1:
-        group_cols = ["Month", "Sensor_Name"]
-        color = "Sensor_Name"
-    else:
+def plot_month_counts(df, sensor=None, **kwargs):
+    if not sensor or is_value(sensor):
         group_cols = ["Month"]
         color = None
+    else:
+        group_cols = ["Month", "Sensor_Name"]
+        color = "Sensor_Name"
     month_df = df.groupby(group_cols)["Hourly_Counts"].sum().reset_index()
     month_df["month_num"] = pd.to_datetime(month_df.Month, format="%B").dt.month
     fig = px.bar(
@@ -59,34 +57,25 @@ def plot_month_counts(df, year=None, sensor=None, **kwargs):
     return fig
 
 
-def plot_sensors(
+def plot_sensor_traffic(
     df,
     sensor=None,
-    year=None,
-    month=None,
     same_yscale=False,
     row_height=150,
     limit=10,
     **kwargs,
 ):
-    if not isinstance(sensor, str):
-        # Too many plots doesn't make sense visually and also plotly express
-        # does not like it.
-        sensor = list(sensor)[:limit]
+    # if not isinstance(sensor, str):
+    #     # Too many plots doesn't make sense visually and also plotly express
+    #     # does not like it.
+    #     sensor = list(sensor)[:limit]
 
-    df = filter_foot_df(df, year=year, month=month, sensor=sensor)
     if len(df) == 0:
         return None
-
     title = f"Hourly Footfall Counts by Sensor"
-    title_filters = [str(fil) for fil in (month, year) if fil is not None]
-    if title_filters:
-        title += f" for {' '.join(title_filters)}"
-
     target_sensors = (
         df.groupby("Sensor_Name")["Hourly_Counts"].sum().sort_values(ascending=False)
     )[:limit]
-    df = filter_foot_df(df, sensor=target_sensors.index)
 
     fig = px.line(
         df,
@@ -111,17 +100,13 @@ def plot_sensors(
     return fig
 
 
-def plot_years(
-    df, sensor=None, year=None, month=None, same_yscale=False, row_height=100, **kwargs
+def plot_year_traffic(
+    df, sensor, same_yscale=False, row_height=100, **kwargs
 ):
-    df = filter_foot_df(df, year=year, month=month, sensor=sensor)
     if len(df) == 0:
         return None
 
     title = f"{sensor} Hourly Footfall Counts by year"
-    if month is not None:
-        title += f" for {month}"
-
     # prep additional data required
     year_counts = df.groupby("Year")["Hourly_Counts"].sum().sort_index(ascending=False)
 
@@ -150,8 +135,7 @@ def plot_years(
     return fig
 
 
-def plot_scatter_map(df, year=None, month=None, sensor=None, **kwargs):
-    df = filter_foot_df(df, year=year, month=None, sensor=sensor)
+def plot_sensor_map(df, **kwargs):
     sensor_totals_df = (
         df.groupby("Sensor_Name")
         .agg(
@@ -178,7 +162,7 @@ def plot_scatter_map(df, year=None, month=None, sensor=None, **kwargs):
 
 
 def plot_stacked_sensors(df, year=None, sensor=None, normalised=True):
-    df = filter_foot_df(df, year=year, sensor=sensor)
+    # df = filter_foot_df(df, year=year, sensor=sensor)
     sensor_years_s = df.groupby(["Sensor_Name", "Year"])["Hourly_Counts"].sum()
     sensor_dfs = [
         (sensor, dfx.reset_index("Sensor_Name"))
