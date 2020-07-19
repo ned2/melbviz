@@ -9,23 +9,32 @@ from utils import is_value
 px.set_mapbox_access_token(MAPBOX_KEY)
 
 
-def plot_sensor_counts(df, **kwargs):
+def plot_sensor_counts(df, title_func=None, **kwargs):
     """Make a bar chart for total footfals for each sensor"""
+    title = "Ranked Sensor Traffic"
+    if callable(title_func):
+        title = title_func(title)
     total_df = (
         df.groupby("Sensor_Name")["Hourly_Counts"]
         .sum()
         .sort_values()
         .reset_index(name="Total Counts")
     )
-    kwargs["height"] = 18 * len(total_df)
+    if "height" not in kwargs:
+        kwargs["height"] = max(18 * len(total_df), 500)
     fig = px.bar(
-        total_df, x="Total Counts", y="Sensor_Name", orientation="h", **kwargs,
+        total_df,
+        x="Total Counts",
+        y="Sensor_Name",
+        orientation="h",
+        title=title,
+        **kwargs,
     )
-    fig.update_layout(yaxis_title=None, xaxis_side="top")
+    fig.update_layout(title_x=0.5, yaxis_title=None, xaxis_title=None, xaxis_side="top")
     return fig
 
 
-def plot_month_counts(df, sensor=None, **kwargs):
+def plot_month_counts(df, sensor=None, title_func=None, **kwargs):
     if not sensor or is_value(sensor):
         group_cols = ["Month"]
         color = None
@@ -43,7 +52,7 @@ def plot_month_counts(df, sensor=None, **kwargs):
         **kwargs,
     )
     fig.update_layout(
-        yaxis_title="Total Counts",
+        yaxis_title="Sensor Traffic",
         xaxis_title=None,
         legend=dict(
             title_text="",
@@ -58,21 +67,21 @@ def plot_month_counts(df, sensor=None, **kwargs):
 
 
 def plot_sensor_traffic(
-    df,
-    sensor=None,
-    same_yscale=False,
-    row_height=150,
-    limit=10,
-    **kwargs,
+    df, same_yscale=False, row_height=150, limit=5, title_func=None, **kwargs,
 ):
     if len(df) == 0:
         return None
-    title = f"Hourly Footfall Counts by Sensor"
+    title = f"Hourly Pedestrian Traffic by Sensor"
+    if callable(title_func):
+        title = title_func(title)
     target_sensors = (
         df.groupby("Sensor_Name")["Hourly_Counts"].sum().sort_values(ascending=False)
     )[:limit]
 
     df = df[df["Sensor_Name"].isin(set(target_sensors.index))]
+
+    if "height" not in kwargs:
+        kwargs["height"] = max(len(target_sensors) * row_height, 500)
 
     fig = px.line(
         df,
@@ -81,7 +90,6 @@ def plot_sensor_traffic(
         facet_row="Sensor_Name",
         title=title,
         category_orders={"Sensor_Name": list(target_sensors.index)},
-        height=len(target_sensors) * row_height,
         **kwargs,
     )
 
@@ -98,15 +106,14 @@ def plot_sensor_traffic(
 
 
 def plot_year_traffic(
-    df, sensor, same_yscale=False, row_height=100, **kwargs
+    df, sensor, same_yscale=False, row_height=100, title_func=None, **kwargs
 ):
     if len(df) == 0:
         return None
-
     title = f"{sensor} Hourly Footfall Counts by year"
-    # prep additional data required
+    if callable(title_func):
+        title = title_func(title)
     year_counts = df.groupby("Year")["Hourly_Counts"].sum().sort_index(ascending=False)
-
     # make the figure with Plotly Express
     fig = px.line(
         df,
@@ -132,7 +139,10 @@ def plot_year_traffic(
     return fig
 
 
-def plot_sensor_map(df, **kwargs):
+def plot_sensor_map(df, title_func=None, **kwargs):
+    title = "Sensor Traffic"
+    if callable(title_func):
+        title = title_func(title)
     sensor_totals_df = (
         df.groupby("Sensor_Name")
         .agg(
@@ -144,7 +154,7 @@ def plot_sensor_map(df, **kwargs):
         )
         .reset_index()
     )
-    return px.scatter_mapbox(
+    fig = px.scatter_mapbox(
         sensor_totals_df,
         lat="latitude",
         lon="longitude",
@@ -154,12 +164,17 @@ def plot_sensor_map(df, **kwargs):
         color_continuous_scale=px.colors.cyclical.IceFire,
         size_max=20,
         zoom=13,
+        title=title,
         **kwargs,
     )
+    fig.update_layout(title_x=0.5)
+    return fig
 
 
-def plot_stacked_sensors(df, year=None, sensor=None, normalised=True):
-    # df = filter_foot_df(df, year=year, sensor=sensor)
+def plot_stacked_sensors(df, year=None, sensor=None, normalised=True, title_func=None):
+    title = "Proportion of footfalls for each sensor by year"
+    if callable(title_func):
+        title = title_func(title)
     sensor_years_s = df.groupby(["Sensor_Name", "Year"])["Hourly_Counts"].sum()
     sensor_dfs = [
         (sensor, dfx.reset_index("Sensor_Name"))
@@ -179,43 +194,5 @@ def plot_stacked_sensors(df, year=None, sensor=None, normalised=True):
             )
         )
 
-    fig.update_layout(
-        width=1500, height=1200, title="Proportion of footfalls for each sensor by year"
-    )
-    return fig
-
-
-# don't think we need this
-def make_line_plot(df, years=None, sensors=None, normalised=True):
-    if years is not None:
-        df = df[df["Year"].isin(years)]
-    if sensors is not None:
-        df = df[df["Sensor_Name"].isin(sensors)]
-    sensor_years_s = df.groupby(["Sensor_Name", "Year"])["Hourly_Counts"].sum()
-    sensor_dfs = [
-        (sensor, dfx.reset_index("Sensor_Name"))
-        for sensor, dfx in sensor_years_s.groupby(level=0)
-    ]
-
-    fig = go.Figure()
-    for sensor, df in sensor_dfs:
-        fig.add_trace(
-            go.Scatter(
-                mode="lines+markers",
-                x=df.index,
-                y=df["Hourly_Counts"],
-                name=sensor,
-                hovertemplate="%{y:,}",
-                # don't truncate the hover text
-                hoverlabel={"namelength": -1},
-                # line=go.scatter.Line(color="gray"),
-            )
-        )
-
-    fig.update_layout(
-        clickmode="event+select",
-        width=1500,
-        height=1000,
-        title="Proportion of footfalls for each sensor by year",
-    )
+    fig.update_layout(width=1500, height=1200, title=title)
     return fig

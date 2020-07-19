@@ -23,6 +23,18 @@ def sort_months(months):
     return sorted(months, key=lambda month: month_ref.index(month))
 
 
+def title_with_filters(title, filters=None):
+    if filters is None:
+        return title
+    filter_vals = [
+        filters[param] for param in ["month", "year"] if filters[param]
+    ]
+    if len(filter_vals) == 0:
+        return title
+    suffix = ", ".join(str(f_val) for f_val in filter_vals)
+    return f"{title} for {suffix}"
+
+
 def is_value(obj):
     """Check if an object is a string or numeric value"""
     return isinstance(obj, str) or isinstance(obj, numbers.Number)

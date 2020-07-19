@@ -116,19 +116,3 @@ class PedestrianDataset:
         """Plot and display a Figure in a notebook"""
         figure = self.get_fig(*args, **kwargs)
         return display(figure)
-
-    def make_callback(self, plot_kind, **plot_params):
-        """Make callback function for custom plot that can be filtered"""
-        # get the func just to do validation
-        _func = self.get_plot_func(plot_kind)
-
-        def callback(**filters):
-            if plot_kind in ("month_counts", "sensor_traffic", "year_traffic"):
-                # some plots need to know the selected sensor(s)
-                plot_params["sensor"] = filters["sensor"]
-            if self.debug:
-                print(f"Callback for plot '{plot_kind}'")
-                print(f"Callback params: {filters}")
-            return self.filter(**filters).plot(plot_kind, **plot_params)
-
-        return callback
