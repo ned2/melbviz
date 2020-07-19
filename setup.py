@@ -16,10 +16,12 @@ VERSION = "0.0.1"
 
 
 # What packages are required for this module to be executed?
-REQUIRED = ["pandas", "plotly", "dash", "ipython"]
+REQUIRED = ["pandas", "plotly", "dash", "ipython", "ipywidgets", "voila"]
 
 # Optional Packages
-EXTRAS = {}
+EXTRAS = {
+    "eda": ["jupyterlab", "visidata", "ptpython", "black", "jupyterlab-code-formatter"]
+}
 
 # get the absolute path to this file
 here = os.path.abspath(os.path.dirname(__file__))

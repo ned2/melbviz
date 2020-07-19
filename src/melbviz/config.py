@@ -8,7 +8,7 @@ MAPBOX_KEY = os.getenv("MAPBOX_KEY")
 
 ROOT_PATH = Path(os.path.abspath(os.path.dirname(__file__)))
 
-DATA_PATH = Path(os.getenv("DATA_PATH"), ROOT_PATH / ".." / "data")
+DATA_PATH = Path(os.getenv("DATA_PATH", ROOT_PATH / ".." / "data"))
 
 COUNTS_PATH = (
     DATA_PATH / "Pedestrian_Counting_System___2009_to_Present__counts_per_hour_.csv"
