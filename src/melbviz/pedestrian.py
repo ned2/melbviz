@@ -1,10 +1,9 @@
-import collections
 from functools import lru_cache, cached_property
 
 from IPython.display import display
 import pandas as pd
 
-from .utils import display_output, is_value, sort_months
+from .utils import sort_months, filter_pedestrian_df, load_and_clean_pedestrian_data
 from .plots import (
     plot_sensor_counts,
     plot_month_counts,
@@ -47,56 +46,17 @@ class PedestrianDataset:
         return sorted(self.df["Sensor_Name"].unique())
 
     @classmethod
-    def load(cls, csv_path, sensor_csv_path=None, **kwargs):
+    def load(cls, counts_csv_path, sensor_csv_path=None, **kwargs):
         """Load and clean the pedestrian dataset into a DataFrame"""
-        df = pd.read_csv(csv_path)
-        df["datetime"] = pd.to_datetime(
-            {
-                "day": df["Mdate"],
-                "year": df["Year"],
-                "hour": df["Time"],
-                "month": pd.to_datetime(df["Month"], format="%B").dt.month,
-            }
-        )
-        df["datetime_flat_year"] = pd.to_datetime(
-            {
-                "day": df["Mdate"],
-                "year": 2000,
-                "hour": df["Time"],
-                "month": pd.to_datetime(df["Month"], format="%B").dt.month,
-            }
-        )
-
-        if sensor_csv_path is not None:
-            geo_df = pd.read_csv(sensor_csv_path)
-            df = df.merge(geo_df, left_on="Sensor_Name", right_on="sensor_description")
+        df = load_and_clean_pedestrian_data(counts_csv_path, sensor_csv_path)
         return cls(df, **kwargs)
 
     @lru_cache()
     def filter(self, year=None, month=None, sensor=None):
-        """Filter the dataset dataset.
-        
-        Returns a filtered instance of a FootDataset
-        """
-        df = self.df
-        params = {"Year": year, "Sensor_Name": sensor, "Month": month}
-        if self.debug:
-            print(f"Filter params: {params}")
-        for param, param_val in params.items():
-            if param_val is None:
-                continue
-            elif is_value(param_val):
-                param_val = [param_val]
-            elif isinstance(param_val, collections.abc.Iterable):
-                param_val = list(param_val)
-            else:
-                raise Exception(
-                    f"Invalid value {param_val}, params must be str, numeric, or"
-                    " an iterable"
-                )
-            if len(param_val) == 0:
-                continue
-            df = df[df[param].isin(set(param_val))]
+        """Filter the dataset dataset, returning new instance of a PedestrianDataset"""
+        df = filter_pedestrian_df(
+            self.df, year=year, month=month, sensor=sensor, debug=self.debug
+        )
         return self.__class__(df, debug=self.debug)
 
     @classmethod
@@ -108,11 +68,11 @@ class PedestrianDataset:
         return cls.plot_func_map[kind]
 
     def get_fig(self, plot_kind, *args, **kwargs):
-        """Get Plotly Figure from a range of custom figures"""
+        """Make a Plotly Figure from a range of custom figures"""
         plot_func = self.get_plot_func(plot_kind)
         return plot_func(self.df, *args, **kwargs)
 
     def plot(self, *args, **kwargs):
-        """Plot and display a Figure in a notebook"""
+        """Make and display a Plotly Figure in a notebook"""
         figure = self.get_fig(*args, **kwargs)
         return display(figure)

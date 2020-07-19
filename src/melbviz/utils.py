@@ -1,8 +1,55 @@
 import calendar
+import collections
 import functools
 import numbers
 
 import pandas as pd
+
+
+def load_and_clean_pedestrian_data(counts_csv_path, sensor_csv_path=None):
+    df = pd.read_csv(counts_csv_path)
+    df["datetime"] = pd.to_datetime(
+        {
+            "day": df["Mdate"],
+            "year": df["Year"],
+            "hour": df["Time"],
+            "month": pd.to_datetime(df["Month"], format="%B").dt.month,
+        }
+    )
+    df["datetime_flat_year"] = pd.to_datetime(
+        {
+            "day": df["Mdate"],
+            "year": 2000,
+            "hour": df["Time"],
+            "month": pd.to_datetime(df["Month"], format="%B").dt.month,
+        }
+    )
+    if sensor_csv_path is not None:
+        geo_df = pd.read_csv(sensor_csv_path)
+        df = df.merge(geo_df, left_on="Sensor_Name", right_on="sensor_description")
+    return df
+
+
+def filter_pedestrian_df(df, year=None, month=None, sensor=None, debug=False):
+    params = {"Year": year, "Sensor_Name": sensor, "Month": month}
+    if debug:
+        print(f"Filter params: {params}")
+    for param, param_val in params.items():
+        if param_val is None:
+            continue
+        elif is_value(param_val):
+            param_val = [param_val]
+        elif isinstance(param_val, collections.abc.Iterable):
+            param_val = list(param_val)
+        else:
+            raise Exception(
+                f"Invalid value {param_val}, params must be str, numeric, or"
+                " an iterable"
+            )
+        if len(param_val) == 0:
+            continue
+        df = df[df[param].isin(set(param_val))]
+    return df
 
 
 def display_output(func):
@@ -27,7 +74,7 @@ def title_with_filters(title, filters=None):
     if filters is None:
         return title
     filter_vals = [
-        filters[param] for param in ["month", "year"] if filters[param]
+        filters[param] for param in ["month", "year"] if filters.get(param, None)
     ]
     if len(filter_vals) == 0:
         return title

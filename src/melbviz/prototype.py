@@ -10,7 +10,7 @@ from ipywidgets import (
     interactive_output,
 )
 
-from .utils import title_with_filters
+from .utils import title_with_filters, is_value
 from .pedestrian import PedestrianDataset
 
 
@@ -27,9 +27,10 @@ class PedestrianDemo(PedestrianDataset):
             this_plot_params["title_func"] = partial(
                 title_with_filters, filters=filters
             )
-            if plot_kind in ("month_counts", "year_traffic"):
-                # some plots need to know the selected sensor(s)
-                this_plot_params["sensor"] = filters["sensor"]
+            if plot_kind == "month_counts":
+                # break out sensors if more than one sensor was filtered on
+                split_sensors = filters["sensor"] and not is_value(filters["sensor"])
+                this_plot_params["split_sensors"] = split_sensors
             if self.debug:
                 print(f"Callback for plot '{plot_kind}'")
                 print(f"Callback params: {filters}")
@@ -37,8 +38,13 @@ class PedestrianDemo(PedestrianDataset):
 
         return callback
 
-    def prototype(self):
+    def prototype(self, title=None, start_year=None):
         """Create a prototype Dashboard"""
+        if title is None:
+            title = "Melbourne CBD Pedestrian Traffic"
+        if start_year is None:
+            start_year = self.years[-1]
+            
         # inputs
         year_input = Dropdown(options=self.years, description="Year")
         month_input = Dropdown(description="Month")
@@ -62,7 +68,7 @@ class PedestrianDemo(PedestrianDataset):
             sensor_input.value = []
 
         year_input.observe(update_inputs, "value")
-        year_input.value = self.years[-1]
+        year_input.value = start_year
 
         # outputs
         month_counts_output = interactive_output(
@@ -83,7 +89,7 @@ class PedestrianDemo(PedestrianDataset):
         )
 
         # layout
-        title = HTML("<H1>Melbourne CBD Pedestrian Traffic</h1>")
+        title = HTML(f"<H1>{title}</h1>")
         inputs = VBox([year_input, month_input, sensor_input])
         col1_row1 = HBox(
             [VBox([HBox([inputs]), month_counts_output]), sensors_map_output]
@@ -91,6 +97,7 @@ class PedestrianDemo(PedestrianDataset):
         col1_row2 = sensors_traffic_output
         col1 = VBox([col1_row1, col1_row2])
         col2 = sensor_counts_output
-        rows = [title, HBox([col1, col2])]
-        layout = VBox(rows) 
-        return layout
+        rows = [HBox([title]), HBox([col1, col2])]
+        for row in rows:
+            row.layout.justify_content = "center"
+        return VBox(rows)

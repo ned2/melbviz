@@ -3,7 +3,6 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 from .config import MAPBOX_KEY
-from .utils import is_value
 
 
 px.set_mapbox_access_token(MAPBOX_KEY)
@@ -40,13 +39,16 @@ def plot_sensor_counts(df, title_func=None, **kwargs):
     return fig
 
 
-def plot_month_counts(df, sensor=None, title_func=None, **kwargs):
-    if not sensor or is_value(sensor):
-        group_cols = ["Month"]
-        color = None
-    else:
+def plot_month_counts(df, split_sensors=False, title_func=None, **kwargs):
+    title = f"Monthly Sensor Traffic"
+    if callable(title_func):
+        title = title_func(title)
+    if split_sensors:
         group_cols = ["Month", "Sensor_Name"]
         color = "Sensor_Name"
+    else:
+        group_cols = ["Month"]
+        color = None
     month_df = df.groupby(group_cols)["Hourly_Counts"].sum().reset_index()
     month_df["month_num"] = pd.to_datetime(month_df.Month, format="%B").dt.month
     fig = px.bar(
@@ -55,6 +57,7 @@ def plot_month_counts(df, sensor=None, title_func=None, **kwargs):
         y="Hourly_Counts",
         barmode="group",
         color=color,
+        title=title,
         **kwargs,
     )
     fig.update_layout(
@@ -99,28 +102,33 @@ def plot_sensor_traffic(
         category_orders={"Sensor_Name": list(target_sensors.index)},
         **kwargs,
     )
-    fig.update_layout(
-        title_x=0.5,
-        xaxis_showgrid=True,
-        xaxis_title_text=None,
-        yaxis_matches=None if same_yscale else "y",
-        yaxis_showgrid=False,
-        yaxis_zeroline=False,
-        yaxis_title_text=None,
+    fig.update_layout(title_x=0.5)
+    fig.update_yaxes(
+        matches=None if same_yscale else "y",
+        showgrid=False,
+        zeroline=False,
+        title_text=None,
     )
+    fig.update_xaxes(showgrid=True, title_text=None)
     fig.for_each_annotation(lambda a: a.update(textangle=0, text=a.text.split("=")[-1]))
     return fig
 
 
-def plot_year_traffic(
-    df, sensor, same_yscale=False, row_height=100, title_func=None, **kwargs
-):
+def plot_year_traffic(df, same_yscale=False, row_height=150, title_func=None, **kwargs):
+    """Plot traffic for a single sensor
+    Note: assumes the DataFrame has been filtered to a single sensor already. 
+    """
     if len(df) == 0:
         return None
+    sensor = df["Sensor_Name"].unique()[0]
     title = f"{sensor} Hourly Footfall Counts by year"
     if callable(title_func):
         title = title_func(title)
     year_counts = df.groupby("Year")["Hourly_Counts"].sum().sort_index(ascending=False)
+
+    if "height" not in kwargs:
+        kwargs["height"] = max(len(year_counts) * row_height, 500)
+
     # make the figure with Plotly Express
     fig = px.line(
         df,
@@ -129,7 +137,6 @@ def plot_year_traffic(
         facet_row="Year",
         title=title,
         category_orders={"Year": list(year_counts.index)},
-        height=len(year_counts) * row_height,
         **kwargs,
     )
 
