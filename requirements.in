@@ -1,4 +1,6 @@
 matplotlib
-dash
 pandas
 jupyterlab
+plotly
+dash
+ptpython
