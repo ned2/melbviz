@@ -1,9 +1,10 @@
 import collections
-import functools
+from functools import lru_cache, cached_property
 
+from IPython.display import display
 import pandas as pd
 
-from utils import display_output, is_value
+from utils import display_output, is_value, sort_months
 from plots import (
     plot_sensor_counts,
     plot_month_counts,
@@ -25,7 +26,7 @@ class PedestrianDataset:
         "stacked_sensors": plot_stacked_sensors,
     }
 
-    def __init__(self, dataframe, debug=False):
+    def __init__(self, dataframe, filters=None, debug=False):
         self._dataframe = dataframe
         self.debug = debug
 
@@ -33,8 +34,20 @@ class PedestrianDataset:
     def df(self):
         return self._dataframe
 
+    @cached_property
+    def years(self):
+        return sorted(self.df["Year"].unique())
+
+    @cached_property
+    def months(self):
+        return sort_months(self.df["Month"].unique())
+
+    @cached_property
+    def sensors(self):
+        return sorted(self.df["Sensor_Name"].unique())
+
     @classmethod
-    def load(cls, csv_path, lat_long_path=None, **kwargs):
+    def load(cls, csv_path, sensor_csv_path=None, **kwargs):
         """Load and clean the pedestrian dataset into a DataFrame"""
         df = pd.read_csv(csv_path)
         df["datetime"] = pd.to_datetime(
@@ -54,20 +67,22 @@ class PedestrianDataset:
             }
         )
 
-        if lat_long_path is not None:
-            geo_df = pd.read_csv(lat_long_path)
+        if sensor_csv_path is not None:
+            geo_df = pd.read_csv(sensor_csv_path)
             df = df.merge(geo_df, left_on="Sensor_Name", right_on="sensor_description")
-        return cls(df, kwargs)
+        return cls(df, **kwargs)
 
-    @functools.lru_cache()
+    @lru_cache()
     def filter(self, year=None, month=None, sensor=None):
         """Filter the dataset dataset.
         
         Returns a filtered instance of a FootDataset
         """
         df = self.df
-        param_map = {"Year": year, "Sensor_Name": sensor, "Month": month}
-        for param, param_val in param_map.items():
+        params = {"Year": year, "Sensor_Name": sensor, "Month": month}
+        if self.debug:
+            print(f"Filter params: {params}")
+        for param, param_val in params.items():
             if param_val is None:
                 continue
             elif is_value(param_val):
@@ -81,8 +96,8 @@ class PedestrianDataset:
                 )
             if len(param_val) == 0:
                 continue
-            df = self.df[self.df[param].isin(set(param_val))]
-        return self.__class__(df)
+            df = df[df[param].isin(set(param_val))]
+        return self.__class__(df, debug=self.debug)
 
     @classmethod
     def get_plot_func(cls, kind):
@@ -92,9 +107,9 @@ class PedestrianDataset:
             raise ValueError()
         return cls.plot_func_map[kind]
 
-    def get_fig(self, kind, *args, **kwargs):
+    def get_fig(self, plot_kind, *args, **kwargs):
         """Get Plotly Figure from a range of custom figures"""
-        plot_func = self.get_plot_func(kind)
+        plot_func = self.get_plot_func(plot_kind)
         return plot_func(self.df, *args, **kwargs)
 
     def plot(self, *args, **kwargs):
@@ -106,11 +121,14 @@ class PedestrianDataset:
         """Make callback function for custom plot that can be filtered"""
         # get the func just to do validation
         _func = self.get_plot_func(plot_kind)
+
         def callback(**filters):
-            if self.debug:
-                print(f"Filter values: {filters}")
             if plot_kind in ("month_counts", "sensor_traffic", "year_traffic"):
                 # some plots need to know the selected sensor(s)
                 plot_params["sensor"] = filters["sensor"]
+            if self.debug:
+                print(f"Callback for plot '{plot_kind}'")
+                print(f"Callback params: {filters}")
             return self.filter(**filters).plot(plot_kind, **plot_params)
+
         return callback

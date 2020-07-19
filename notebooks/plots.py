@@ -65,17 +65,14 @@ def plot_sensor_traffic(
     limit=10,
     **kwargs,
 ):
-    # if not isinstance(sensor, str):
-    #     # Too many plots doesn't make sense visually and also plotly express
-    #     # does not like it.
-    #     sensor = list(sensor)[:limit]
-
     if len(df) == 0:
         return None
     title = f"Hourly Footfall Counts by Sensor"
     target_sensors = (
         df.groupby("Sensor_Name")["Hourly_Counts"].sum().sort_values(ascending=False)
     )[:limit]
+
+    df = df[df["Sensor_Name"].isin(set(target_sensors.index))]
 
     fig = px.line(
         df,
