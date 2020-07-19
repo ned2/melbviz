@@ -30,7 +30,13 @@ def plot_sensor_counts(df, title_func=None, **kwargs):
         title=title,
         **kwargs,
     )
-    fig.update_layout(title_x=0.5, yaxis_title=None, xaxis_title=None, xaxis_side="top")
+    fig.update_layout(
+        title_x=0.5,
+        yaxis_title=None,
+        yaxis_showgrid=False,
+        xaxis_title=None,
+        xaxis_side="top",
+    )
     return fig
 
 
@@ -54,6 +60,7 @@ def plot_month_counts(df, sensor=None, title_func=None, **kwargs):
     fig.update_layout(
         yaxis_title="Sensor Traffic",
         xaxis_title=None,
+        yaxis_showgrid=False,
         legend=dict(
             title_text="",
             orientation="h",
@@ -92,16 +99,16 @@ def plot_sensor_traffic(
         category_orders={"Sensor_Name": list(target_sensors.index)},
         **kwargs,
     )
-
-    fig.update_yaxes(
-        matches=None if same_yscale else "y",
-        showgrid=False,
-        zeroline=False,
-        title_text=None,
+    fig.update_layout(
+        title_x=0.5,
+        xaxis_showgrid=True,
+        xaxis_title_text=None,
+        yaxis_matches=None if same_yscale else "y",
+        yaxis_showgrid=False,
+        yaxis_zeroline=False,
+        yaxis_title_text=None,
     )
-    fig.update_xaxes(showgrid=True, title_text=None)
     fig.for_each_annotation(lambda a: a.update(textangle=0, text=a.text.split("=")[-1]))
-    fig.update_layout(title_x=0.5)
     return fig
 
 
