@@ -45,12 +45,22 @@ class PedestrianDataset:
     def sensors(self):
         return sorted(self.df["Sensor_Name"].unique())
 
+    def write_parquet(self, path):
+        """Write a PandasFrame to disk as Parquet using standardised config."""
+        self.df.to_parquet(path, engine="fastparquet", compression="snappy")
+
     @classmethod
     def load(cls, counts_csv_path, sensor_csv_path=None, **kwargs):
         """Load and clean the pedestrian dataset into a DataFrame"""
         df = load_and_clean_pedestrian_data(counts_csv_path, sensor_csv_path)
         return cls(df, **kwargs)
 
+    @classmethod
+    def from_parquet(cls, path, **kwargs):
+        """Write a PandasFrame to disk as Parquet using standardised config."""
+        df = pd.read_parquet(path)
+        return cls(df, **kwargs)
+        
     @lru_cache()
     def filter(self, year=None, month=None, sensor=None):
         """Filter the dataset dataset, returning new instance of a PedestrianDataset"""

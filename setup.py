@@ -16,7 +16,16 @@ VERSION = "0.0.1"
 
 
 # What packages are required for this module to be executed?
-REQUIRED = ["pandas", "plotly", "dash", "ipython", "ipywidgets", "voila"]
+REQUIRED = [
+    "pandas",
+    "plotly",
+    "dash",
+    "ipython",
+    "ipywidgets",
+    "voila",
+    "fastparquet",
+    "python-snappy",
+]
 
 # Optional Packages
 EXTRAS = {
