@@ -1,0 +1,26 @@
+#sidebar {
+    position: fixed;
+    width: 500px;
+}
+
+#controls-months {
+    width: 500px;
+}
+
+#controls > * {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+/* grid: rows / cols */
+#content {
+    margin-left: 500px;
+    display: grid;
+    grid: 1fr 1fr / 1fr 1fr;
+}
+
+#sensor-traffic {
+    grid-column-start: 1;
+    grid-column-end: span col2-start;
+}

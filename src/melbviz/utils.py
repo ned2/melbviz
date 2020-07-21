@@ -7,7 +7,7 @@ import pandas as pd
 
 
 def load_and_clean_pedestrian_data(counts_csv_path, sensor_csv_path=None):
-    df = pd.read_csv(counts_csv_path)
+    df = pd.read_csv(counts_csv_path).set_index("ID")
     df["datetime"] = pd.to_datetime(
         {
             "day": df["Mdate"],
@@ -27,6 +27,7 @@ def load_and_clean_pedestrian_data(counts_csv_path, sensor_csv_path=None):
     if sensor_csv_path is not None:
         geo_df = pd.read_csv(sensor_csv_path)
         df = df.merge(geo_df, left_on="Sensor_Name", right_on="sensor_description")
+    df = df.sort_values("datetime")
     return df
 
 

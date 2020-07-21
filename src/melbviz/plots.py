@@ -64,6 +64,7 @@ def plot_month_counts(df, split_sensors=False, title_func=None, **kwargs):
         yaxis_title="Sensor Traffic",
         xaxis_title=None,
         yaxis_showgrid=False,
+        title_x=0.5,
         legend=dict(
             title_text="",
             orientation="h",
