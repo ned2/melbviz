@@ -3,13 +3,18 @@
     width: 500px;
 }
 
-#controls-months {
-    width: 500px;
+#month-input, #sensor-input, #year-input {
+    width: 200px;
+}
+
+#controls {
+    width: 70%;
 }
 
 #controls > * {
     display: flex;
     justify-content: space-between;
+    margin: 0.5em;
 }
 
 

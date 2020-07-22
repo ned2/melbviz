@@ -104,3 +104,7 @@ def geocode_sensors(df):
     ]
     lat_lngs_df = pd.DataFrame(lat_lngs, columns=["lat", "long"])
     return pd.concat([locations_df, lat_lngs_df], axis=1)
+
+
+def make_options(sequence):
+    return [{"label": item, "value": item} for item in sequence]
