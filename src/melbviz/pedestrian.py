@@ -25,9 +25,13 @@ class PedestrianDataset:
         "stacked_sensors": plot_stacked_sensors,
     }
 
-    def __init__(self, dataframe, filters=None, debug=False):
+    def __init__(self, dataframe, figure_layout=None, debug=False):
         self._dataframe = dataframe
         self.debug = debug
+        if figure_layout is None:
+            self.figure_layout = {}
+        else:
+            self.figure_layout = figure_layout
 
     @property
     def df(self):
@@ -77,7 +81,7 @@ class PedestrianDataset:
         df = filter_pedestrian_df(
             self.df, year=year, month=month, sensor=sensor, debug=self.debug
         )
-        return self.__class__(df, debug=self.debug)
+        return self.__class__(df, figure_layout=self.figure_layout, debug=self.debug)
 
     @classmethod
     def get_plot_func(cls, kind):
@@ -87,10 +91,17 @@ class PedestrianDataset:
             raise ValueError()
         return cls.plot_func_map[kind]
 
-    def get_fig(self, plot_kind, *args, **kwargs):
-        """Make a Plotly Figure from a range of custom figures"""
+    def get_fig(self, plot_kind, **kwargs):
+        """Make a Plotly Figure from a range of custom figures
+
+        plot_kind:    The name of the type of figure to generate.
+        **kwargs:     Keyword arguments will be passed into the  
+                      keyword arguments of the underling Plotly Express call.
+        """
         plot_func = self.get_plot_func(plot_kind)
-        return plot_func(self.df, *args, **kwargs)
+        figure = plot_func(self.df, **kwargs)
+        figure.update_layout(**self.figure_layout)
+        return figure
 
     def plot(self, *args, **kwargs):
         """Make and display a Plotly Figure in a notebook"""

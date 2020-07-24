@@ -9,7 +9,13 @@ from .utils import make_options
 
 
 app = Dash(__name__)
-data = PedestrianDataset.from_parquet(DATA_PATH / "melbviz_small.parquet")
+
+# this will be passed into the layout of each figure
+figure_layout = {}
+
+data = PedestrianDataset.from_parquet(
+    DATA_PATH / "melbviz_small.parquet", figure_layout=figure_layout
+)
 
 
 controls = html.Div(
@@ -44,11 +50,7 @@ sidebar = html.Div(
             id="controls-months",
             children=[
                 controls,
-                dcc.Graph(
-                    id="month-counts",
-                    figure=data.get_fig("month_counts"),
-                    config={"displayModeBar": False},
-                ),
+                dcc.Graph(id="month-counts", config={"displayModeBar": False}),
             ],
         ),
     ],
@@ -94,7 +96,11 @@ def sensor_map(year, month, sensor):
     [Input("year-input", "value"), Input("sensor-input", "value"),],
 )
 def month_counts(year, sensor):
-    return data.filter(year=year, sensor=sensor).get_fig("month_counts")
+    figure = data.filter(year=year, sensor=sensor).get_fig("month_counts")
+    # make the plot transparent
+    rgba = "rgba(0,0,0,0)"
+    figure.update_layout(paper_bgcolor=rgba, plot_bgcolor=rgba)
+    return figure
 
 
 @app.callback(

@@ -21,7 +21,7 @@ def plot_sensor_counts(df, title_func=None, **kwargs):
     )
     if "height" not in kwargs:
         kwargs["height"] = max(18 * len(total_df), 500)
-    fig = px.bar(
+    figure = px.bar(
         total_df,
         x="Total Counts",
         y="Sensor_Name",
@@ -29,14 +29,14 @@ def plot_sensor_counts(df, title_func=None, **kwargs):
         title=title,
         **kwargs,
     )
-    fig.update_layout(
+    figure.update_layout(
         title_x=0.5,
         yaxis_title=None,
         yaxis_showgrid=False,
         xaxis_title=None,
         xaxis_side="top",
     )
-    return fig
+    return figure
 
 
 def plot_month_counts(df, split_sensors=False, title_func=None, **kwargs):
@@ -51,7 +51,7 @@ def plot_month_counts(df, split_sensors=False, title_func=None, **kwargs):
         color = None
     month_df = df.groupby(group_cols)["Hourly_Counts"].sum().reset_index()
     month_df["month_num"] = pd.to_datetime(month_df.Month, format="%B").dt.month
-    fig = px.bar(
+    figure = px.bar(
         month_df.sort_values(by="month_num"),
         x="Month",
         y="Hourly_Counts",
@@ -60,11 +60,12 @@ def plot_month_counts(df, split_sensors=False, title_func=None, **kwargs):
         title=title,
         **kwargs,
     )
-    fig.update_layout(
-        yaxis_title="Sensor Traffic",
-        xaxis_title=None,
-        yaxis_showgrid=False,
+    figure.update_layout(
         title_x=0.5,
+        yaxis_title="Sensor Traffic",
+        yaxis_showgrid=False,
+        yaxis_zeroline=False,
+        xaxis_title=None,
         legend=dict(
             title_text="",
             orientation="h",
@@ -74,7 +75,7 @@ def plot_month_counts(df, split_sensors=False, title_func=None, **kwargs):
             x=1,
         ),
     )
-    return fig
+    return figure
 
 
 def plot_sensor_traffic(
@@ -94,7 +95,7 @@ def plot_sensor_traffic(
     if "height" not in kwargs:
         kwargs["height"] = max(len(target_sensors) * row_height, 500)
 
-    fig = px.line(
+    figure = px.line(
         df,
         y="Hourly_Counts",
         x="datetime",
@@ -103,16 +104,16 @@ def plot_sensor_traffic(
         category_orders={"Sensor_Name": list(target_sensors.index)},
         **kwargs,
     )
-    fig.update_layout(title_x=0.5)
-    fig.update_yaxes(
+    figure.update_layout(title_x=0.5)
+    figure.update_yaxes(
         matches=None if same_yscale else "y",
         showgrid=False,
         zeroline=False,
         title_text=None,
     )
-    fig.update_xaxes(showgrid=True, title_text=None)
-    fig.for_each_annotation(lambda a: a.update(textangle=0, text=a.text.split("=")[-1]))
-    return fig
+    figure.update_xaxes(showgrid=True, title_text=None)
+    figure.for_each_annotation(lambda a: a.update(textangle=0, text=a.text.split("=")[-1]))
+    return figure
 
 
 def plot_year_traffic(df, same_yscale=False, row_height=150, title_func=None, **kwargs):
@@ -131,7 +132,7 @@ def plot_year_traffic(df, same_yscale=False, row_height=150, title_func=None, **
         kwargs["height"] = max(len(year_counts) * row_height, 500)
 
     # make the figure with Plotly Express
-    fig = px.line(
+    figure = px.line(
         df,
         y="Hourly_Counts",
         x="datetime_flat_year",
@@ -142,16 +143,16 @@ def plot_year_traffic(df, same_yscale=False, row_height=150, title_func=None, **
     )
 
     # update figure produced by Plotly Express with fine-tuning
-    fig.update_yaxes(
+    figure.update_yaxes(
         matches=None if same_yscale else "y",
         showgrid=False,
         zeroline=False,
         title_text=None,
     )
-    fig.update_xaxes(showgrid=True, title_text=None)
-    fig.for_each_annotation(lambda a: a.update(textangle=0, text=a.text.split("=")[-1]))
-    fig.update_layout(title_x=0.5)
-    return fig
+    figure.update_xaxes(showgrid=True, title_text=None)
+    figure.for_each_annotation(lambda a: a.update(textangle=0, text=a.text.split("=")[-1]))
+    figure.update_layout(title_x=0.5)
+    return figure
 
 
 def plot_sensor_map(df, title_func=None, **kwargs):
@@ -169,7 +170,7 @@ def plot_sensor_map(df, title_func=None, **kwargs):
         )
         .reset_index()
     )
-    fig = px.scatter_mapbox(
+    figure = px.scatter_mapbox(
         sensor_totals_df,
         lat="latitude",
         lon="longitude",
@@ -182,8 +183,8 @@ def plot_sensor_map(df, title_func=None, **kwargs):
         title=title,
         **kwargs,
     )
-    fig.update_layout(title_x=0.5)
-    return fig
+    figure.update_layout(title_x=0.5)
+    return figure
 
 
 def plot_stacked_sensors(df, year=None, sensor=None, normalised=True, title_func=None):
@@ -196,9 +197,9 @@ def plot_stacked_sensors(df, year=None, sensor=None, normalised=True, title_func
         for sensor, dfx in sensor_years_s.groupby(level=0)
     ]
 
-    fig = go.Figure()
+    figure = go.Figure()
     for sensor, df in sensor_dfs:
-        fig.add_trace(
+        figure.add_trace(
             go.Scatter(
                 x=df.index,
                 y=df["Hourly_Counts"],
@@ -209,5 +210,5 @@ def plot_stacked_sensors(df, year=None, sensor=None, normalised=True, title_func
             )
         )
 
-    fig.update_layout(width=1500, height=1200, title=title)
-    return fig
+    figure.update_layout(width=1500, height=1200, title=title)
+    return figure
