@@ -130,7 +130,6 @@ class PedestrianDataset:
                       keyword arguments of the underling Plotly Express call.
         """
         if title_filters:
-            print(self.active_filters)
             title_func = partial(title_with_filters, filters=self.active_filters)
         else:
             title_func = None

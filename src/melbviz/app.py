@@ -12,7 +12,7 @@ from . import figure_layouts as layouts
 app = Dash(__name__)
 
 # this will be passed into the layout of each figure
-figure_layout = dict(margin=dict(l=0, r=0, t=70, b=None, pad=None))
+figure_layout = dict(margin=dict(l=10, r=10, t=70, b=None, pad=None))
 
 data = PedestrianDataset.from_parquet(
     DATA_PATH / "melbviz_small.parquet", figure_layout=figure_layout
@@ -54,7 +54,11 @@ sidebar = html.Div(
             id="controls-months",
             children=[
                 controls,
-                dcc.Graph(id="month-counts", config={"displayModeBar": False}),
+                dcc.Graph(
+                    id="month-counts",
+                    className="loader",
+                    config={"displayModeBar": False},
+                ),
             ],
         ),
     ],
@@ -64,9 +68,15 @@ sidebar = html.Div(
 content = html.Div(
     id="content",
     children=[
-        dcc.Graph(id="sensor-map", config={"displayModeBar": False}),
-        dcc.Graph(id="sensor-counts", config={"displayModeBar": False}),
-        dcc.Graph(id="sensor-traffic", config={"displayModeBar": False}),
+        dcc.Graph(
+            id="sensor-map", className="loader", config={"displayModeBar": False}
+        ),
+        dcc.Graph(
+            id="sensor-counts", className="loader", config={"displayModeBar": False}
+        ),
+        dcc.Graph(
+            id="sensor-traffic", className="loader", config={"displayModeBar": False}
+        ),
     ],
 )
 

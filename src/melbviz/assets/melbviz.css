@@ -44,3 +44,63 @@ h1 {
     grid-column-start: 1;
     grid-column-end: span col2-start;
 }
+
+
+/*
+ * loading spinners
+ * Note: this is currently broken in Dash, but there's a fix that's just been
+ * merged into master: https://github.com/plotly/dash-core-components/pull/837
+ */
+
+
+/* This loader will hide the component and add a spinner after 1 second */
+*[data-dash-is-loading="true"].loader {
+    transition-delay: 1s;
+    transition-property: visibility;
+    visibility: hidden;
+}
+
+
+/* This loader will fade the component and add a spinner after 1 second */
+*[data-dash-is-loading="true"].loader-fade {
+    transition-delay: 1s;
+    transition-property: opacity;
+    transition-duration: 1s;
+    opacity: 0.6;
+}
+
+
+/* the spinner animation */
+@keyframes spinner {
+  to {transform: rotate(360deg);}
+}
+
+
+/* Animation that makes elements visible sharply at end of animation */ 
+@keyframes offset {
+    from {visibility: hidden;}
+    99% {visibility: hidden;}
+    to {visibility: visible;}
+}
+
+
+*[data-dash-is-loading="true"].loader::before,
+*[data-dash-is-loading="true"].loader-fade::before {
+    z-index: 9999;
+    visibility: visible;
+    content: '';
+    box-sizing: border-box;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 30px;
+    height: 30px;
+    margin-top: -10px;
+    margin-left: -10px;
+    border-radius: 50%;
+    border: 2px solid #999;
+    border-top-color: #222;
+    /* Wait for 0.5s before displaying spinner using 'offset' anomation This
+       avoids flickering when wait times are low. */ 
+    animation: offset 0.5s, spinner .6s linear infinite;
+}
