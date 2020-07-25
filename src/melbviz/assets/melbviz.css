@@ -14,8 +14,12 @@ h1 {
     padding: 0.5rem;
 }
 
-#month-input, #sensor-input, #year-input {
-    width: 200px;
+#month-input, #year-input {
+    width: 150px;
+}
+
+#sensor-input {
+    width: 300px;
 }
 
 #controls {

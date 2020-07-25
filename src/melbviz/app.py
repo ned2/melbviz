@@ -6,12 +6,13 @@ import dash_html_components as html
 from .pedestrian import PedestrianDataset
 from .config import DATA_PATH
 from .utils import make_options
+from . import figure_layouts as layouts
 
 
 app = Dash(__name__)
 
 # this will be passed into the layout of each figure
-figure_layout = {}
+figure_layout = dict(margin=dict(l=0, r=0, t=70, b=None, pad=None))
 
 data = PedestrianDataset.from_parquet(
     DATA_PATH / "melbviz_small.parquet", figure_layout=figure_layout
@@ -36,7 +37,10 @@ controls = html.Div(
             [html.Label("Month"), dcc.Dropdown(id="month-input", className="input")]
         ),
         html.Div(
-            [html.Label("Sensor"), dcc.Dropdown(id="sensor-input", className="input")]
+            [
+                html.Label("Sensor"),
+                dcc.Dropdown(id="sensor-input", multi=True, className="input"),
+            ]
         ),
     ],
 )
@@ -71,12 +75,30 @@ app.layout = html.Div([sidebar, content])
 
 
 @app.callback(
-    [Output("month-input", "options"), Output("sensor-input", "options")],
+    [
+        Output("month-input", "options"),
+        Output("month-input", "value"),
+        Output("sensor-input", "options"),
+        Output("sensor-input", "value"),
+    ],
     [Input("year-input", "value")],
 )
 def update_inputs(year):
     new_data = data.filter(year)
-    return (make_options(new_data.months), make_options(new_data.sensors))
+    return (make_options(new_data.months), None, make_options(new_data.sensors), None)
+
+
+@app.callback(
+    Output("month-counts", "figure"),
+    [Input("year-input", "value"), Input("sensor-input", "value"),],
+)
+def month_counts(year, sensor):
+    split_sensors = sensor is not None and len(sensor) > 1
+    figure = data.filter(year=year, sensor=sensor).get_fig(
+        "month_counts", split_sensors=split_sensors
+    )
+    figure.update_layout(layouts.clean_layout)
+    return figure
 
 
 @app.callback(
@@ -88,18 +110,9 @@ def update_inputs(year):
     ],
 )
 def sensor_map(year, month, sensor):
-    return data.filter(year=year, month=month, sensor=sensor).get_fig("sensor_map")
-
-
-@app.callback(
-    Output("month-counts", "figure"),
-    [Input("year-input", "value"), Input("sensor-input", "value"),],
-)
-def month_counts(year, sensor):
-    figure = data.filter(year=year, sensor=sensor).get_fig("month_counts")
-    # make the plot transparent
-    rgba = "rgba(0,0,0,0)"
-    figure.update_layout(paper_bgcolor=rgba, plot_bgcolor=rgba)
+    figure = data.filter(year=year, month=month, sensor=sensor).get_fig(
+        "sensor_map", height=600
+    )
     return figure
 
 
@@ -112,7 +125,12 @@ def month_counts(year, sensor):
     ],
 )
 def sensor_counts(year, month, sensor):
-    return data.filter(year=year, month=month, sensor=sensor).get_fig("sensor_counts")
+
+    figure = data.filter(year=year, month=month, sensor=sensor).get_fig(
+        "sensor_counts", width=500
+    )
+    figure.update_layout(layouts.clean_layout)
+    return figure
 
 
 @app.callback(
@@ -124,4 +142,5 @@ def sensor_counts(year, month, sensor):
     ],
 )
 def sensor_traffic(year, month, sensor):
-    return data.filter(year, month, sensor).get_fig("sensor_traffic")
+    figure = data.filter(year, month, sensor).get_fig("sensor_traffic")
+    return figure
