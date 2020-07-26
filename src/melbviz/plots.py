@@ -9,7 +9,7 @@ px.set_mapbox_access_token(MAPBOX_KEY)
 
 
 def plot_sensor_counts(df, title_func=None, **kwargs):
-    """Make a bar chart for total footfals for each sensor"""
+    """Make a bar chart of total counts for each sensor"""
     title = "Ranked Sensor Traffic"
     if callable(title_func):
         title = title_func(title)
@@ -41,7 +41,8 @@ def plot_sensor_counts(df, title_func=None, **kwargs):
 
 
 def plot_month_counts(df, split_sensors=False, title_func=None, **kwargs):
-    title = f"Monthly Sensor Traffic"
+    """Make a bar plot of monthly counts"""
+    title = "Monthly Sensor Traffic"
     if callable(title_func):
         title = title_func(title)
     if split_sensors:
@@ -82,6 +83,7 @@ def plot_month_counts(df, split_sensors=False, title_func=None, **kwargs):
 def plot_sensor_traffic(
     df, same_yscale=False, row_height=150, limit=5, title_func=None, **kwargs,
 ):
+    """Plot hourly traffic for one or more sensors"""
     if len(df) == 0:
         return None
     title = f"Hourly Pedestrian Traffic by Sensor"
@@ -99,7 +101,7 @@ def plot_sensor_traffic(
     figure = px.line(
         df,
         y="Hourly_Counts",
-        x="datetime",
+        x="Date_Time",
         facet_row="Sensor_Name",
         title=title,
         category_orders={"Sensor_Name": list(target_sensors.index)},
@@ -114,7 +116,7 @@ def plot_sensor_traffic(
     )
     figure.update_xaxes(showgrid=True, title_text=None)
     figure.for_each_annotation(
-        lambda a: a.update(x=0.5, textangle=0, text=a.text.split("=")[-1])
+        lambda a: a.update(textangle=0, text=a.text.split("=")[-1])
     )
     return figure
 
@@ -161,6 +163,7 @@ def plot_year_traffic(df, same_yscale=False, row_height=150, title_func=None, **
 
 
 def plot_sensor_map(df, title_func=None, **kwargs):
+    """Plot a spatial scatter plot of sensor traffic."""
     title = "Sensor Traffic"
     if callable(title_func):
         title = title_func(title)
@@ -188,7 +191,7 @@ def plot_sensor_map(df, title_func=None, **kwargs):
         title=title,
         **kwargs,
     )
-    figure.update_layout(title_x=0.5,)
+    figure.update_layout(title_x=0.5)
     return figure
 
 
