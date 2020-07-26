@@ -8,6 +8,8 @@ import pandas as pd
 
 def load_and_clean_pedestrian_data(counts_csv_path, sensor_csv_path=None):
     df = pd.read_csv(counts_csv_path).set_index("ID")
+    # Date_Time field previously had incorrect time so needed to reconstruct it.
+    # TODO: switch to loading as datetime by providing a parsing template 
     df["datetime"] = pd.to_datetime(
         {
             "day": df["Mdate"],

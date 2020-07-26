@@ -35,9 +35,9 @@ h1 {
 
 /* grid: rows / cols */
 #content {
-    margin-left: 500px;
+    margin-left: 520px;
     display: grid;
-    grid: 1fr 1fr / 1fr 1fr;
+    grid: 0fr 0fr / 1fr 1fr;
 }
 
 #sensor-traffic {

@@ -21,6 +21,7 @@ def plot_sensor_counts(df, title_func=None, **kwargs):
     )
     if "height" not in kwargs:
         kwargs["height"] = max(18 * len(total_df), 500)
+
     figure = px.bar(
         total_df,
         x="Total Counts",
@@ -62,7 +63,7 @@ def plot_month_counts(df, split_sensors=False, title_func=None, **kwargs):
     )
     figure.update_layout(
         title_x=0.5,
-        yaxis_title="Sensor Traffic",
+        yaxis_title="Total Counts",
         yaxis_showgrid=False,
         yaxis_zeroline=False,
         xaxis_title=None,
@@ -93,7 +94,7 @@ def plot_sensor_traffic(
     df = df[df["Sensor_Name"].isin(set(target_sensors.index))]
 
     if "height" not in kwargs:
-        kwargs["height"] = max(len(target_sensors) * row_height, 500)
+        kwargs["height"] = max(len(target_sensors) * row_height, 400)
 
     figure = px.line(
         df,
@@ -112,7 +113,9 @@ def plot_sensor_traffic(
         title_text=None,
     )
     figure.update_xaxes(showgrid=True, title_text=None)
-    figure.for_each_annotation(lambda a: a.update(textangle=0, text=a.text.split("=")[-1]))
+    figure.for_each_annotation(
+        lambda a: a.update(x=0.5, textangle=0, text=a.text.split("=")[-1])
+    )
     return figure
 
 
@@ -150,7 +153,9 @@ def plot_year_traffic(df, same_yscale=False, row_height=150, title_func=None, **
         title_text=None,
     )
     figure.update_xaxes(showgrid=True, title_text=None)
-    figure.for_each_annotation(lambda a: a.update(textangle=0, text=a.text.split("=")[-1]))
+    figure.for_each_annotation(
+        lambda a: a.update(textangle=0, text=a.text.split("=")[-1])
+    )
     figure.update_layout(title_x=0.5)
     return figure
 
@@ -168,22 +173,22 @@ def plot_sensor_map(df, title_func=None, **kwargs):
                 "longitude": lambda x: x.iloc[0],
             }
         )
-        .reset_index()
+        .reset_index().rename(columns={"Hourly_Counts": "Total Counts"})
     )
     figure = px.scatter_mapbox(
         sensor_totals_df,
         lat="latitude",
         lon="longitude",
-        # color="peak_hour",
-        size="Hourly_Counts",
+        color="Total Counts",
+        size="Total Counts",
         text="Sensor_Name",
-        color_continuous_scale=px.colors.cyclical.IceFire,
-        size_max=40,
+        color_continuous_scale=px.colors.sequential.Plasma,
+        size_max=50,
         zoom=13,
         title=title,
         **kwargs,
     )
-    figure.update_layout(title_x=0.5)
+    figure.update_layout(title_x=0.5,)
     return figure
 
 

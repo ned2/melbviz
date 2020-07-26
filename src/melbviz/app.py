@@ -12,7 +12,7 @@ from . import figure_layouts as layouts
 app = Dash(__name__)
 
 # this will be passed into the layout of each figure
-figure_layout = dict(margin=dict(l=10, r=10, t=70, b=None, pad=None))
+figure_layout = {"margin":{"t":60}}
 
 data = PedestrianDataset.from_parquet(
     DATA_PATH / "melbviz_small.parquet", figure_layout=figure_layout
@@ -71,9 +71,10 @@ content = html.Div(
         dcc.Graph(
             id="sensor-map", className="loader", config={"displayModeBar": False}
         ),
-        dcc.Graph(
-            id="sensor-counts", className="loader", config={"displayModeBar": False}
-        ),
+        html.Div(),
+        # dcc.Graph(
+        #     id="sensor-counts", className="loader", config={"displayModeBar": False}
+        # ),
         dcc.Graph(
             id="sensor-traffic", className="loader", config={"displayModeBar": False}
         ),
@@ -121,26 +122,27 @@ def month_counts(year, sensor):
 )
 def sensor_map(year, month, sensor):
     figure = data.filter(year=year, month=month, sensor=sensor).get_fig(
-        "sensor_map", height=600
+        "sensor_map", height=600, width=800
     )
+    figure.update_layout(margin=dict(b=50))
     return figure
 
 
-@app.callback(
-    Output("sensor-counts", "figure"),
-    [
-        Input("year-input", "value"),
-        Input("month-input", "value"),
-        Input("sensor-input", "value"),
-    ],
-)
-def sensor_counts(year, month, sensor):
+# @app.callback(
+#     Output("sensor-counts", "figure"),
+#     [
+#         Input("year-input", "value"),
+#         Input("month-input", "value"),
+#         Input("sensor-input", "value"),
+#     ],
+# )
+# def sensor_counts(year, month, sensor):
 
-    figure = data.filter(year=year, month=month, sensor=sensor).get_fig(
-        "sensor_counts", width=500
-    )
-    figure.update_layout(layouts.clean_layout)
-    return figure
+#     figure = data.filter(year=year, month=month, sensor=sensor).get_fig(
+#         "sensor_counts", width=450
+#     )
+#     figure.update_layout(layouts.clean_layout)
+#     return figure
 
 
 @app.callback(

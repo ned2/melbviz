@@ -24,14 +24,11 @@ class PedestrianDemo(PedestrianDataset):
 
         def callback(**filters):
             this_plot_params = dict(plot_params)
-            this_plot_params["title_func"] = partial(
-                title_with_filters, filters=filters
-            )
             if plot_kind == "month_counts":
                 # break out sensors if more than one sensor was filtered on
                 split_sensors = filters["sensor"] and not is_value(filters["sensor"])
                 this_plot_params["split_sensors"] = split_sensors
-            if self.debug:
+            if self.params["debug"]:
                 print(f"Callback for plot '{plot_kind}'")
                 print(f"Callback params: {filters}")
             return self.filter(**filters).plot(plot_kind, **this_plot_params)
