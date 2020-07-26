@@ -42,6 +42,10 @@ class PedestrianDataset:
     def df(self, df):
         self._dataframe = df
 
+    @property
+    def available_plots(self):
+        return list(self.plot_func_map.keys())
+
     @cached_property
     def years(self):
         """Sorted list of years present in this dataset"""
