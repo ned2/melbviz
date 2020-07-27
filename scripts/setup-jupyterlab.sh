@@ -1,4 +1,4 @@
-#!/usr/bin/env bash                                                                                                                                                                                 
+#!/usr/bin/env bash
 
 # plotly -- https://plotly.com/python/getting-started
 jupyter labextension install jupyterlab-plotly@4.9.0

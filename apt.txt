@@ -1,1 +1,3 @@
 libsnappy-dev
+emacs
+vim
