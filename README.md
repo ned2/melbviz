@@ -37,7 +37,9 @@ python3 -m pip install jupyter-repo2docker
 
 ...or you may need to perform a local install:
 
-`python3 -m pip install jupyter-repo2docker --user`
+```
+python3 -m pip install jupyter-repo2docker --user
+```
 
 
 ### Creating the Docker Image
