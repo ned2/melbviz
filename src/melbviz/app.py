@@ -70,7 +70,6 @@ content = html.Div(
         dcc.Graph(
             id="sensor-map", config={"displayModeBar": False}
         ),
-        html.Div(),
         dcc.Graph(
             id="sensor-counts", config={"displayModeBar": False}
         ),

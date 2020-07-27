@@ -33,6 +33,11 @@ h1 {
 }
 
 
+#sensor-counts {
+    height: 600px;
+    overflow-y: auto;
+}
+
 /* grid: rows / cols */
 #content {
     margin-left: 520px;
