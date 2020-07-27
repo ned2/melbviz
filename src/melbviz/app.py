@@ -15,7 +15,7 @@ app = Dash(__name__)
 figure_layout = {"margin":{"t":60}}
 
 data = PedestrianDataset.from_parquet(
-    DATA_PATH / "melbviz_small.parquet", figure_layout=figure_layout
+    DATA_PATH / "melbviz.parquet", figure_layout=figure_layout
 )
 
 
@@ -56,7 +56,6 @@ sidebar = html.Div(
                 controls,
                 dcc.Graph(
                     id="month-counts",
-                    className="loader",
                     config={"displayModeBar": False},
                 ),
             ],
@@ -69,14 +68,14 @@ content = html.Div(
     id="content",
     children=[
         dcc.Graph(
-            id="sensor-map", className="loader", config={"displayModeBar": False}
+            id="sensor-map", config={"displayModeBar": False}
         ),
         html.Div(),
         dcc.Graph(
-            id="sensor-counts", className="loader", config={"displayModeBar": False}
+            id="sensor-counts", config={"displayModeBar": False}
         ),
         dcc.Graph(
-            id="sensor-traffic", className="loader", config={"displayModeBar": False}
+            id="sensor-traffic", config={"displayModeBar": False}
         ),
     ],
 )
