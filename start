@@ -1,3 +1,5 @@
 #!/bin/bash
-export DATA_PATH=data
+
+export DATA_PATH=${HOME}/data
+
 exec "$@"

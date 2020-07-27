@@ -72,9 +72,9 @@ content = html.Div(
             id="sensor-map", className="loader", config={"displayModeBar": False}
         ),
         html.Div(),
-        # dcc.Graph(
-        #     id="sensor-counts", className="loader", config={"displayModeBar": False}
-        # ),
+        dcc.Graph(
+            id="sensor-counts", className="loader", config={"displayModeBar": False}
+        ),
         dcc.Graph(
             id="sensor-traffic", className="loader", config={"displayModeBar": False}
         ),
@@ -128,21 +128,21 @@ def sensor_map(year, month, sensor):
     return figure
 
 
-# @app.callback(
-#     Output("sensor-counts", "figure"),
-#     [
-#         Input("year-input", "value"),
-#         Input("month-input", "value"),
-#         Input("sensor-input", "value"),
-#     ],
-# )
-# def sensor_counts(year, month, sensor):
+@app.callback(
+    Output("sensor-counts", "figure"),
+    [
+        Input("year-input", "value"),
+        Input("month-input", "value"),
+        Input("sensor-input", "value"),
+    ],
+)
+def sensor_counts(year, month, sensor):
 
-#     figure = data.filter(year=year, month=month, sensor=sensor).get_fig(
-#         "sensor_counts", width=450
-#     )
-#     figure.update_layout(layouts.clean_layout)
-#     return figure
+    figure = data.filter(year=year, month=month, sensor=sensor).get_fig(
+        "sensor_counts", width=450
+    )
+    figure.update_layout(layouts.clean_layout)
+    return figure
 
 
 @app.callback(

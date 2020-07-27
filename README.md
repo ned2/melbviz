@@ -44,8 +44,18 @@ python3 -m pip install jupyter-repo2docker --user
 
 ### Creating the Docker Image
 
+First clone the repository:
+
 ```
-repo2docker https://github.com/ned2/melbviz --no-run --image-name melbviz
+git clone https://github.com/ned2/melbviz.git
+```
+
+Then let's create Docker image from it. Please note that this will download a
+fair bit of data, so you might not want to be using mobile data. The image
+itself once installed is ~3GB.
+
+```
+repo2docker <path-to-cloned-repo> --no-run --image-name melbviz
 ```
 
 ### Running the Image
@@ -59,7 +69,7 @@ docker image ls | grep r2d
 Now run it:
 
 ```
-docker run -p 8888:8888 <image-id>
+docker run -p 8888:8888 -p 8050:8050 <image-id>
 ```
 
 If all has worked, you should now be able to open up Jupyter Lab in your browser
