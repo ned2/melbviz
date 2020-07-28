@@ -76,7 +76,7 @@ If all has worked, you should now be able to open up Jupyter Lab in your browser
 at the following address: http://localhost:8888/lab. You will then need to copy
 the security token displayed on your terminal into the dialogue box.
 
-Once you have Jupyter Lab loaded, navigate to the `notebooks` directory in the
+Once you have Jupyter Lab loaded, navigate to the `workshop` directory in the
 directory tree and open up `workshop_part1.ipynb`.
 
 You're now ready to start the workshop!
