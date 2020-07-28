@@ -21,6 +21,9 @@ workshop, then unless otherwise instructed, you want installation method `A`.
 
 ## A: Workshop Instructions
 
+_Note: I will be updating these instructions to use mybinder.org directly rather than 
+repo2docker, which is the tool that powers Binder._
+
 These instructions will create a Docker image containing the full environment
 required to complete the workshop. To follow them, you will first need to
 install:
