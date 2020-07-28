@@ -1,6 +1,6 @@
 # Melbviz
 
-Melbviz is a package for learning how to building sashboards in Python, using
+Melbviz is a package for learning how to building dashboards in Python, using
 the [Dash library](plotly/dash), and also for learning about Pedestrian traffic
 in the central business district of Melbourne, Australia. The package is
 designed around analysing the Melbourne City Council [Pedestrian Counting System
