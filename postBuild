@@ -12,8 +12,8 @@ wget https://data.melbourne.vic.gov.au/api/views/h57g-5234/rows.csv?accessType=D
 ## setup Lupyter Lab extensions 
 
 # plotly -- https://plotly.com/python/getting-started
-jupyter labextension install jupyterlab-plotly@4.9.0
-jupyter labextension install @jupyter-widgets/jupyterlab-manager plotlywidget@4.9.0
+jupyter labextension install --minimize=False --dev-build=False jupyterlab-plotly@4.9.0
+jupyter labextension install --minimize=False --dev-build=False @jupyter-widgets/jupyterlab-manager plotlywidget@4.9.0
 
 # voila -- https://github.com/voila-dashboards/voila
 #jupyter labextension install @jupyter-voila/jupyterlab-preview
