@@ -4,13 +4,13 @@ from IPython.display import display
 import pandas as pd
 
 from . import plots
+from .config import COUNTS_CSV_PATH, SENSOR_CSV_PATH, CLEANED_DATA_PATH
 from .utils import (
     sort_months,
     filter_pedestrian_df,
     load_and_clean_pedestrian_data,
     title_with_filters,
 )
-
 
 class PedestrianDataset:
 
@@ -62,24 +62,24 @@ class PedestrianDataset:
         return sorted(self.df["Sensor_Name"].unique())
 
     @classmethod
-    def load(cls, counts_csv_path, sensor_csv_path, **kwargs):
+    def load(cls, counts_csv_path=COUNTS_CSV_PATH, sensor_csv_path=SENSOR_CSV_PATH, **kwargs):
         """Load and clean the pedestrian dataset into a DataFrame"""
         df = load_and_clean_pedestrian_data(counts_csv_path, sensor_csv_path)
         return cls(df, **kwargs)
 
     @classmethod
-    def from_parquet(cls, path, **kwargs):
+    def from_parquet(cls, path=CLEANED_DATA_PATH, **kwargs):
         """Load a dataset from a saved Parquet file."""
         df = pd.read_parquet(path)
         return cls(df, **kwargs)
 
     @classmethod
     def from_csv(cls, path, **kwargs):
-        """Load a dataset from a saved Parquet file."""
-        df = pd.read_parquet(path, parse_dates=["datetime", "datetime_flat_year"])
+        """Load a dataset from a cleaned and saved CSV file."""
+        df = pd.read_csv(path, parse_dates=["datetime", "datetime_flat_year"])
         return cls(df, **kwargs)
 
-    def to_parquet(self, path):
+    def to_parquet(self, path=CLEANED_DATA_PATH):
         """Write the DataFrame to disk as Parquet using standardised config."""
         self.df.to_parquet(path, engine="fastparquet", compression="snappy")
 
