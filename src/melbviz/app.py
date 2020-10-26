@@ -12,7 +12,7 @@ from . import figure_layouts as layouts
 app = Dash(__name__)
 
 # this will be passed into the layout of each figure
-figure_layout = {"margin":{"t":60}}
+figure_layout = {"margin": {"t": 60}}
 
 data = PedestrianDataset.from_parquet(
     DATA_PATH / "melbviz.parquet", figure_layout=figure_layout
@@ -67,15 +67,9 @@ sidebar = html.Div(
 content = html.Div(
     id="content",
     children=[
-        dcc.Graph(
-            id="sensor-map", config={"displayModeBar": False}
-        ),
-        dcc.Graph(
-            id="sensor-counts", config={"displayModeBar": False}
-        ),
-        dcc.Graph(
-            id="sensor-traffic", config={"displayModeBar": False}
-        ),
+        dcc.Graph(id="sensor-map", config={"displayModeBar": False}),
+        dcc.Graph(id="sensor-counts", config={"displayModeBar": False}),
+        dcc.Graph(id="sensor-traffic", config={"displayModeBar": False}),
     ],
 )
 
@@ -99,7 +93,10 @@ def update_inputs(year):
 
 @app.callback(
     Output("month-counts", "figure"),
-    [Input("year-input", "value"), Input("sensor-input", "value"),],
+    [
+        Input("year-input", "value"),
+        Input("sensor-input", "value"),
+    ],
 )
 def month_counts(year, sensor):
     split_sensors = sensor is not None and len(sensor) > 1
@@ -135,10 +132,7 @@ def sensor_map(year, month, sensor):
     ],
 )
 def sensor_counts(year, month, sensor):
-
-    figure = data.filter(year=year, month=month, sensor=sensor).get_fig(
-        "sensor_counts", width=450
-    )
+    figure = data.filter(year, month, sensor).get_fig("sensor_counts", width=450)
     figure.update_layout(layouts.clean_layout)
     return figure
 

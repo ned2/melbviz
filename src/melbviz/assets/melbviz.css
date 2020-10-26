@@ -38,16 +38,16 @@ h1 {
     overflow-y: auto;
 }
 
-/* grid: rows / cols */
+
 #content {
     margin-left: 520px;
     display: grid;
-    grid: 0fr 0fr / 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
 }
 
 #sensor-traffic {
     grid-column-start: 1;
-    grid-column-end: span col2-start;
+    grid-column-end: span col2-end;
 }
 
 

@@ -3,6 +3,7 @@
 ## Download the dataset
 
 DATA_DIR=${DATA_PATH-data}
+LABEXT_INSTALL_OPTS="--minimize=False --dev-build=False" 
 
 mkdir -p ${DATA_DIR}
 wget https://data.melbourne.vic.gov.au/api/views/b2ak-trbp/rows.csv?accessType=DOWNLOAD -O ${DATA_DIR}/Pedestrian_Counting_System___2009_to_Present__counts_per_hour_.csv
@@ -12,13 +13,13 @@ wget https://data.melbourne.vic.gov.au/api/views/h57g-5234/rows.csv?accessType=D
 ## setup Lupyter Lab extensions 
 
 # plotly -- https://plotly.com/python/getting-started
-jupyter labextension install --minimize=False --dev-build=False jupyterlab-plotly@4.9.0
-jupyter labextension install --minimize=False --dev-build=False @jupyter-widgets/jupyterlab-manager plotlywidget@4.9.0
+jupyter labextension install ${LABEXT_INSTALL_OPTS} jupyterlab-plotly@4.9.0
+jupyter labextension install ${LABEXT_INSTALL_OPTS} @jupyter-widgets/jupyterlab-manager plotlywidget@4.9.0
 
 # voila -- https://github.com/voila-dashboards/voila
-#jupyter labextension install @jupyter-voila/jupyterlab-preview
-#jupyter serverextension enable voila --sys-prefix
+jupyter labextension install ${LABEXT_INSTALL_OPTS} @jupyter-voila/jupyterlab-preview
+jupyter serverextension enable voila --sys-prefix
 
 # jupyterlab-code-formatter -- https://jupyterlab-code-formatter.readthedocs.io/en/latest/installation.html
-#jupyter labextension install @ryantam626/jupyterlab_code_formatter
-#jupyter serverextension enable --py jupyterlab_code_formatter
+jupyter labextension install ${LABEXT_INSTALL_OPTS} @ryantam626/jupyterlab_code_formatter
+jupyter serverextension enable --py jupyterlab_code_formatter
