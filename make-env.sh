@@ -5,9 +5,9 @@ VENV=melbviz
 
 pyenv virtualenv ${PYTHON} ${VENV}
 export PYENV_VERSION=${VENV}
-pyenv which python
 
 pip install -U pip wheel pip-tools
+pip install -r requirements.txt
 pip install -e .
 
 jupyter labextension install @pyviz/jupyterlab_pyviz

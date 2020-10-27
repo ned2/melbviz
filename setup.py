@@ -19,6 +19,7 @@ VERSION = "0.0.1"
 REQUIRED = [
     "pandas",
     "plotly",
+    "matplotlib",
     "dash",
     "ipywidgets",
     "fastparquet",
