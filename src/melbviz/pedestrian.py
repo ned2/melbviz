@@ -139,7 +139,9 @@ class PedestrianDataset:
             title_func = None
         plot_func = self.get_plot_func(plot_kind)
         figure = plot_func(self.df, title_func=title_func, **kwargs)
-        figure.update_layout(**self.params["figure_layout"])
+        if figure is not None:
+            # TODO: need better solution for when plotting empty DataFrame
+            figure.update_layout(**self.params["figure_layout"])
         return figure
 
     def plot(self, *args, **kwargs):
