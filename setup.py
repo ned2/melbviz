@@ -17,7 +17,9 @@ VERSION = "0.0.1"
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-    "pandas",
+    # pinning due to this bug
+    # https://github.com/pandas-dev/pandas/issues/37094
+    "pandas==1.0.2",
     "plotly",
     "matplotlib",
     "dash",

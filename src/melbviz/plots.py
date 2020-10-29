@@ -87,7 +87,7 @@ def plot_sensor_traffic(
     if len(df) == 0:
         # TODO: need better solution for when plotting empty DataFrame
         return None
-    title = f"Hourly Pedestrian Traffic by Sensor"
+    title = "Hourly Pedestrian Traffic by Sensor"
     if callable(title_func):
         title = title_func(title)
     target_sensors = (
