@@ -6,3 +6,4 @@ jupyterlab-code-formatter
 voila
 jupyterlab
 RISE
+hide_code
