@@ -19,6 +19,17 @@ installing it into your local environment. If you are participating in a
 workshop, then unless otherwise instructed, you want installation method `A`.
 
 
+## Live Environment on Binder
+
+This repo has been prepared to run on the wonderful
+[Binder](https://mybinder.org/) service.
+
+This link will spin up a notebook in JupyterLab with all relevant dependencies
+installed and data downloaded ready to go for you to play around with.
+
+https://mybinder.org/v2/gh/ned2/melbviz/HEAD?urlpath=lab%2Ftree%2Fnotebooks%2Finteractive_data_viz.ipynb
+
+
 ## Local Installation Instructions
 
 To install Melbviz in your own environment (Ubuntu instructions only
