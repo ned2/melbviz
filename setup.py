@@ -11,7 +11,7 @@ URL = "https://github.com/ned2/melbviz"
 AUTHOR = "Ned Letcher"
 AUTHOR_EMAIL = "ned at nedned dot net"
 LICENSE = "Mozilla Public License 2.0"
-REQUIRES_PYTHON = ">=3.8.0"
+REQUIRES_PYTHON = ">=3.7.0"
 VERSION = "0.0.1"
 
 

@@ -1,4 +1,4 @@
-from functools import cached_property, lru_cache, partial
+from functools import lru_cache, partial
 
 from IPython.display import display
 import pandas as pd
@@ -46,17 +46,17 @@ class PedestrianDataset:
     def available_plots(self):
         return list(self.plot_func_map.keys())
 
-    @cached_property
+    @property
     def years(self):
         """Sorted list of years present in this dataset"""
         return sorted(self.df["Year"].unique())
 
-    @cached_property
+    @property
     def months(self):
         """Sorted list of months present in this dataset"""
         return sort_months(self.df["Month"].unique())
 
-    @cached_property
+    @property
     def sensors(self):
         """Alphabetically sorted list of months present in this dataset"""
         return sorted(self.df["Sensor_Name"].unique())
