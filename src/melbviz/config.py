@@ -10,8 +10,8 @@ ROOT_PATH = Path(os.path.abspath(os.path.dirname(__file__)))
 
 DATA_PATH = Path(os.getenv("DATA_PATH", ROOT_PATH / ".." / "data"))
 
-COUNTS_CSV_PATH = (
-    DATA_PATH / "Pedestrian_Counting_System___2009_to_Present__counts_per_hour_.csv"
+COUNTS_CSV_PATH = ( 
+    DATA_PATH / "Pedestrian_Counting_System_-_Monthly__counts_per_hour_.csv"
 )
 
 SENSOR_CSV_PATH = DATA_PATH / "Pedestrian_Counting_System_-_Sensor_Locations.csv"

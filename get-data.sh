@@ -15,7 +15,7 @@ SENSOR_DATASET_ID=h57g-5234
 
 
 download_dataset () {
-    wget --content-disposition --backups=3 --directory-prefix=${DATA_DIR} \
+    wget --content-disposition --backups=1 --directory-prefix=${DATA_DIR} \
          https://data.melbourne.vic.gov.au/api/views/${1}/rows.csv?accessType=DOWNLOAD
 
 }

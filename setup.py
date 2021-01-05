@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 
 # Package meta-data.
 NAME = "melbviz"
-DESCRIPTION = "A library for building dashboards on the Melbourne City Council Pedestrian Counting dataset"
+DESCRIPTION = "A library for doing data-viz with Melbourne CBD pedestrian traffic."
 
 URL = "https://github.com/ned2/melbviz"
 AUTHOR = "Ned Letcher"
