@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from melbviz.pedestrian import PedestrianDataset
 from melbviz.config import DATA_PATH, COUNTS_CSV_PATH, SENSOR_CSV_PATH
 

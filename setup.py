@@ -23,7 +23,6 @@ REQUIRED = [
     "dash",
     "ipywidgets",
     "fastparquet",
-    "python-snappy",
 ]
 
 

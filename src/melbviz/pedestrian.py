@@ -81,7 +81,7 @@ class PedestrianDataset:
 
     def to_parquet(self, path=CLEANED_DATA_PATH):
         """Write the DataFrame to disk as Parquet using standardised config."""
-        self.df.to_parquet(path, engine="fastparquet", compression="snappy")
+        self.df.to_parquet(path, engine="fastparquet", compression="gzip")
 
     def to_csv(self, path, **kwargs):
         """Write the DataFrame to disk as CSV"""
