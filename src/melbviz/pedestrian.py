@@ -68,7 +68,7 @@ class PedestrianDataset:
         return cls(df, **kwargs)
 
     @classmethod
-    def from_parquet(cls, path=CLEANED_DATA_PATH, **kwargs):
+    def from_parquet(cls, path=CLEANED_DATA_PATH, engine="fastparquet", **kwargs):
         """Load a dataset from a saved Parquet file."""
         df = pd.read_parquet(path)
         return cls(df, **kwargs)
