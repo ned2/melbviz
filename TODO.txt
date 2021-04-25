@@ -1,5 +1,8 @@
-* unpin plotly jupyter extension versions from make-env.sh 
+* Add instructions to readme on how to run the Dash apps
+* fix bug in dashboarding workshop
+* create Dash demo notebook
+* Add JupyterDash to workshop2 notebook
 * turn make_parquety.py into Typer command line script installed
   on path within setup.py
-* move bash scripts into bin directory and add to path in setup.py
+
 

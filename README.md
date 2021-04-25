@@ -1,7 +1,8 @@
 # Melbviz
 
-Melbviz is a package for learning how to building dashboards in Python, using
-the [Dash library](plotly/dash), and also for learning about Pedestrian traffic
+Melbviz is a package for learning how to building interactive visualisation and
+dashboards in Python, using the libraries including Plotly, [Plotly
+Dash](plotly/dash), and ipywidgets, while also learning about Pedestrian traffic
 in the central business district of Melbourne, Australia. The package is
 designed around analysing the Melbourne City Council [Pedestrian Counting System
 dataset](https://data.melbourne.vic.gov.au/Transport/Pedestrian-Counting-System-2009-to-Present-counts-/b2ak-trbp).
@@ -68,7 +69,6 @@ pip install -U pip wheel
 pip install -r requirements.txt
 pip install -e .
 
-jupyter labextension install @pyviz/jupyterlab_pyviz
 jupyter labextension install @jupyter-widgets/jupyterlab-manager plotlywidget
 jupyter labextension install jupyterlab-plotly
 jupyter labextension install @ryantam626/jupyterlab_code_formatter
