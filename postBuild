@@ -1,11 +1,14 @@
 #!/bin/bash
 
-## Download the dataset
+## Download and prep the dataset
 
-./make-data.sh
+./get-data.sh
 
 
 ## setup Lupyter Lab extensions 
+
+LABEXT_INSTALL_OPTS="--minimize=False --dev-build=False"
+
 
 # plotly -- https://plotly.com/python/getting-started
 jupyter labextension install ${LABEXT_INSTALL_OPTS} jupyterlab-plotly
@@ -16,6 +19,6 @@ jupyter labextension install ${LABEXT_INSTALL_OPTS} @ryantam626/jupyterlab_code_
 jupyter serverextension enable --py jupyterlab_code_formatter
 
 # hide-code -- https://github.com/kirbs-/hide_code
-jupyter nbextension install --py hide_code
+jupyter nbextension install --user --py hide_code
 jupyter nbextension enable --py hide_code
 jupyter serverextension enable --py hide_code
