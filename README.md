@@ -10,14 +10,28 @@ The project consists of:
 * A python package, `melbviz`, that contains the ingredients for building out
   your own interactive interfaces for exploring Melbourne CBD pedestrian traffic
   using [Dash](plotly/dash), a library for building analytic web apps.
-* A workshop in the form of two Jupyter Notebooks that will take you on a
-  dashboarding journey, going from initial discovery and data wrangling to
-  deploying your completed Dashboard.
+* A collection of Jupyter Notebooks for working with the Melbourne pedestrian datasets.
 
-You can use Melbviz either through a pre-configured Docker image, or by
+You can use Melbviz either through the live environment on Binder, or by
 installing it into your local environment. If you are participating in a
-workshop, then unless otherwise instructed, you want installation method `A`.
+workshop, then unless otherwise instructed, you want to use the Binder method.
 
+## Jupyter Notebooks
+
+These notebooks are found in the `notebooks` directory. The
+`talk_data_viz.ipynb` requires the use of Jupyter Notebook classic to view the
+RISE presentation. It is recommended to use JupyterLab for the remaining
+notebooks.
+
+* `talk_data_viz.ipynb`: A presentation on why we do data visualisation that
+  uses the [RISE](https://rise.readthedocs.io) package
+* `interactive_data_viz.ipynb`: A workshop that goes through the use of the
+  Plotly visualisation package and the ipywidgets package, for doing interactice
+  data visualisation.
+* `workshop_dashboards1.ipynb` and `workshop_dashboards1.ipyn`: A workshop in
+  two parts that will take you on a dashboarding journey, going from initial
+  discovery and data wrangling to deploying your completed Dash dashboard.
+  
 
 ## Live Environment on Binder
 
