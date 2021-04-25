@@ -2,12 +2,7 @@
 
 ## Download the dataset
 
-DATA_DIR=${DATA_PATH-data}
-LABEXT_INSTALL_OPTS="--minimize=False --dev-build=False" 
-
-mkdir -p ${DATA_DIR}
-wget https://data.melbourne.vic.gov.au/api/views/b2ak-trbp/rows.csv?accessType=DOWNLOAD -O ${DATA_DIR}/Pedestrian_Counting_System___2009_to_Present__counts_per_hour_.csv
-wget https://data.melbourne.vic.gov.au/api/views/h57g-5234/rows.csv?accessType=DOWNLOAD -O ${DATA_DIR}/Pedestrian_Counting_System_-_Sensor_Locations.csv
+./make-data.sh
 
 
 ## setup Lupyter Lab extensions 
@@ -15,10 +10,6 @@ wget https://data.melbourne.vic.gov.au/api/views/h57g-5234/rows.csv?accessType=D
 # plotly -- https://plotly.com/python/getting-started
 jupyter labextension install ${LABEXT_INSTALL_OPTS} jupyterlab-plotly
 jupyter labextension install ${LABEXT_INSTALL_OPTS} @jupyter-widgets/jupyterlab-manager plotlywidget
-
-# voila -- https://github.com/voila-dashboards/voila
-jupyter labextension install ${LABEXT_INSTALL_OPTS} @jupyter-voila/jupyterlab-preview
-jupyter serverextension enable voila --sys-prefix
 
 # jupyterlab-code-formatter -- https://github.com/ryantam626/jupyterlab_code_formatter
 jupyter labextension install ${LABEXT_INSTALL_OPTS} @ryantam626/jupyterlab_code_formatter
