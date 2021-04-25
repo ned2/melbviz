@@ -4,13 +4,18 @@ from IPython.display import display
 import pandas as pd
 
 from . import plots
-from .config import COUNTS_CSV_PATH, SENSOR_CSV_PATH, CLEANED_DATA_PATH
+from .config import (
+    MELBVIZ_COUNTS_CSV_PATH,
+    MELBVIZ_SENSOR_CSV_PATH,
+    MELBVIZ_CLEANED_DATA_PATH,
+)
 from .utils import (
     sort_months,
     filter_pedestrian_df,
     load_and_clean_pedestrian_data,
     title_with_filters,
 )
+
 
 class PedestrianDataset:
 
@@ -62,13 +67,18 @@ class PedestrianDataset:
         return sorted(self.df["Sensor_Name"].unique())
 
     @classmethod
-    def load(cls, counts_csv_path=COUNTS_CSV_PATH, sensor_csv_path=SENSOR_CSV_PATH, **kwargs):
+    def load(
+        cls,
+        counts_csv_path=MELBVIZ_COUNTS_CSV_PATH,
+        sensor_csv_path=MELBVIZ_SENSOR_CSV_PATH,
+        **kwargs,
+    ):
         """Load and clean the pedestrian dataset into a DataFrame"""
         df = load_and_clean_pedestrian_data(counts_csv_path, sensor_csv_path)
         return cls(df, **kwargs)
 
     @classmethod
-    def from_parquet(cls, path=CLEANED_DATA_PATH, **kwargs):
+    def from_parquet(cls, path=MELBVIZ_CLEANED_DATA_PATH, **kwargs):
         """Load a dataset from a saved Parquet file."""
         df = pd.read_parquet(path)
         return cls(df, **kwargs)
@@ -79,7 +89,7 @@ class PedestrianDataset:
         df = pd.read_csv(path, parse_dates=["datetime", "datetime_flat_year"])
         return cls(df, **kwargs)
 
-    def to_parquet(self, path=CLEANED_DATA_PATH):
+    def to_parquet(self, path=MELBVIZ_CLEANED_DATA_PATH):
         """Write the DataFrame to disk as Parquet using standardised config."""
         self.df.to_parquet(path, engine="fastparquet", compression="gzip")
 
@@ -130,7 +140,7 @@ class PedestrianDataset:
 
         plot_kind     The name of the type of figure to generate.
         title_filters Boolean indicates whether to add active filters to title.
-        **kwargs      Keyword arguments will be passed into the  
+        **kwargs      Keyword arguments will be passed into the
                       keyword arguments of the underling Plotly Express call.
         """
         if title_filters:

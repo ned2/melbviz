@@ -6,14 +6,12 @@ GOOGLE_GEO_KEY = os.getenv("GOOGLE_GEO_KEY")
 
 MAPBOX_KEY = os.getenv("MAPBOX_KEY")
 
-ROOT_PATH = Path(os.path.abspath(os.path.dirname(__file__)))
+MELBVIZ_DATA_PATH = Path(os.getenv("MELBVIZ_DATA_PATH", Path.home() / "melbviz_data"))
 
-DATA_PATH = Path(os.getenv("DATA_PATH", ROOT_PATH / ".." / "data"))
-
-COUNTS_CSV_PATH = ( 
-    DATA_PATH / "Pedestrian_Counting_System_-_Monthly__counts_per_hour_.csv"
+MELBVIZ_COUNTS_CSV_PATH = ( 
+    MELBVIZ_DATA_PATH / "Pedestrian_Counting_System_-_Monthly__counts_per_hour_.csv"
 )
 
-SENSOR_CSV_PATH = DATA_PATH / "Pedestrian_Counting_System_-_Sensor_Locations.csv"
+MELBVIZ_SENSOR_CSV_PATH = MELBVIZ_DATA_PATH / "Pedestrian_Counting_System_-_Sensor_Locations.csv"
 
-CLEANED_DATA_PATH = DATA_PATH / "melbviz.parquet"
+MELBVIZ_CLEANED_DATA_PATH = MELBVIZ_DATA_PATH / "melbviz.parquet"

@@ -4,7 +4,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 
 from .pedestrian import PedestrianDataset
-from .config import DATA_PATH
+from .config import MELBVIZ_DATA_PATH
 from .utils import make_options
 from . import figure_layouts as layouts
 
@@ -15,7 +15,7 @@ app = Dash(__name__)
 figure_layout = {"margin": {"t": 60}}
 
 data = PedestrianDataset.from_parquet(
-    DATA_PATH / "melbviz.parquet", figure_layout=figure_layout
+    MELBVIZ_DATA_PATH / "melbviz.parquet", figure_layout=figure_layout
 )
 
 

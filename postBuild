@@ -2,17 +2,22 @@
 
 ## Download and prep the dataset
 
+export MELBVIZ_DATA_PATH=${MELBVIZ_DATA_PATH-${HOME}/melbviz_data}
+
 ./get-data.sh
 
 
-## setup Lupyter Lab extensions 
+## setup Jupyter Lab extensions 
 
+# optimise for low-resource installation environments
 LABEXT_INSTALL_OPTS="--minimize=False --dev-build=False"
-
 
 # plotly -- https://plotly.com/python/getting-started
 jupyter labextension install ${LABEXT_INSTALL_OPTS} jupyterlab-plotly
 jupyter labextension install ${LABEXT_INSTALL_OPTS} @jupyter-widgets/jupyterlab-manager plotlywidget
+
+# HoloViz -- jupyter labextension install @pyviz/jupyterlab_pyviz
+jupyter labextension install ${LABEXT_INSTALL_OPTS} @pyviz/jupyterlab_pyviz
 
 # jupyterlab-code-formatter -- https://github.com/ryantam626/jupyterlab_code_formatter
 jupyter labextension install ${LABEXT_INSTALL_OPTS} @ryantam626/jupyterlab_code_formatter

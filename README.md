@@ -46,8 +46,8 @@ https://mybinder.org/v2/gh/ned2/melbviz/HEAD?urlpath=lab%2Ftree%2Fnotebooks%2Fin
 
 ## Local Installation Instructions
 
-To install Melbviz in your own environment (Ubuntu instructions only
-sorry), follow the following steps:
+To install Melbviz in your own environment (Ubuntu instructions only sorry),
+follow the following steps:
 
 Ubuntu system dependencies:
 * Python 3.8+
@@ -57,12 +57,26 @@ Ubuntu system dependencies:
 sudo apt-get install libsnappy-dev
 ```
 
-Create and activate a new virtual environment, then run:
+Create and activate a new virtual environment, then run, the following
+commands. Or, if you use [pyenv](https://github.com/pyenv/pyenv), you can run
+the `make-env.sh` to do all of this in one step (see script to change Python
+version or venv name).
+
 
 ```
+pip install -U pip wheel
+pip install -r requirements.txt
 pip install -e .
+
+jupyter labextension install @pyviz/jupyterlab_pyviz
+jupyter labextension install @jupyter-widgets/jupyterlab-manager plotlywidget
+jupyter labextension install jupyterlab-plotly
+jupyter labextension install @ryantam626/jupyterlab_code_formatter
+jupyter nbextension install --py hide_code
+jupyter nbextension enable --py hide_code
+jupyter serverextension enable --py hide_code
 ```
 
-Documentation TODO:
-* Getting the data
-* Installing Jupyter Lab extensions 
+Download and prep the data:
+
+    ./get-data.sh

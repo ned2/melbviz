@@ -5,7 +5,7 @@
 set -e
 
 # directory to download data into
-DATA_DIR=data
+DATA_DIR=${DATA_PATH-data}
 
 # https://data.melbourne.vic.gov.au/Transport/Pedestrian-Counting-System-2009-to-Present-counts-/b2ak-trbp
 COUNT_DATASET_ID=b2ak-trbp

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-PYTHON=3.8.6
+PYTHON=3.9.4
 VENV=melbviz
 
 pyenv virtualenv ${PYTHON} ${VENV}
