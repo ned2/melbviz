@@ -26,5 +26,5 @@ jupyter serverextension enable --py jupyterlab_code_formatter
 
 # hide-code -- https://github.com/kirbs-/hide_code
 jupyter nbextension install --user --py hide_code
-jupyter nbextension enable --py hide_code
+jupyter nbextension enable --user --py hide_code
 jupyter serverextension enable --py hide_code
