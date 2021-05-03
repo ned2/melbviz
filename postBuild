@@ -13,8 +13,7 @@ export MELBVIZ_DATA_PATH=${MELBVIZ_DATA_PATH-${HOME}/melbviz_data}
 LABEXT_INSTALL_OPTS="--minimize=False --dev-build=False"
 
 # plotly -- https://plotly.com/python/getting-started
-jupyter labextension install ${LABEXT_INSTALL_OPTS} jupyterlab-plotly
-jupyter labextension install ${LABEXT_INSTALL_OPTS} @jupyter-widgets/jupyterlab-manager plotlywidget
+jupyter labextension install ${LABEXT_INSTALL_OPTS} jupyterlab-plotly plotlywidget
 
 # HoloViz -- jupyter labextension install @pyviz/jupyterlab_pyviz
 # (does not support current version of JupyterLab)
