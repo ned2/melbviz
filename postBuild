@@ -15,10 +15,6 @@ LABEXT_INSTALL_OPTS="--minimize=False --dev-build=False"
 # plotly -- https://plotly.com/python/getting-started
 jupyter labextension install ${LABEXT_INSTALL_OPTS} jupyterlab-plotly plotlywidget
 
-# HoloViz -- jupyter labextension install @pyviz/jupyterlab_pyviz
-# (does not support current version of JupyterLab)
-# jupyter labextension install ${LABEXT_INSTALL_OPTS} @pyviz/jupyterlab_pyviz
-
 # jupyterlab-code-formatter -- https://github.com/ryantam626/jupyterlab_code_formatter
 jupyter labextension install ${LABEXT_INSTALL_OPTS} @ryantam626/jupyterlab_code_formatter
 jupyter serverextension enable --py jupyterlab_code_formatter

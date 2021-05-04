@@ -7,3 +7,6 @@ voila
 jupyterlab
 RISE
 hide_code
+holoviews[recommended]
+altair
+

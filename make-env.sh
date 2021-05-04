@@ -10,7 +10,6 @@ pip install -U pip wheel
 pip install -r requirements.txt
 pip install -e .
 
-#jupyter labextension install @pyviz/jupyterlab_pyviz
 jupyter labextension install jupyterlab-plotly plotlywidget
 jupyter labextension install @ryantam626/jupyterlab_code_formatter
 jupyter nbextension install --user --py hide_code
