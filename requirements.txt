@@ -3,6 +3,7 @@ ipdb
 black
 visidata
 jupyterlab-code-formatter
+jupyterdash
 voila
 jupyterlab
 RISE
