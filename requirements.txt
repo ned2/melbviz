@@ -2,12 +2,19 @@ ptpython
 ipdb
 black
 visidata
+pandas
+RISE
+voila
+altair
+holoviews[recommended]
+panel
+plotly
+dash
+matplotlib
+ipympl
+seaborn
+jupyterlab
 jupyterlab-code-formatter
 jupyterdash
-voila
-jupyterlab
-RISE
 hide_code
-holoviews[recommended]
-altair
 
