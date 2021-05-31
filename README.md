@@ -42,7 +42,7 @@ This repo has been prepared to run on the wonderful
 This link will spin up a notebook in JupyterLab with all relevant dependencies
 installed and data downloaded ready to go for you to play around with.
 
-https://mybinder.org/v2/gh/ned2/melbviz/HEAD?urlpath=lab%2Ftree%2Fnotebooks%2Finteractive_data_viz.ipynb
+https://mybinder.org/v2/gh/ned2/melbviz/HEAD?urlpath=lab%2Ftree%2Fnotebooks%2Fworkshop_interactive_data_viz.ipynb
 
 
 ## Local Installation Instructions
@@ -52,6 +52,7 @@ follow the following steps:
 
 Ubuntu system dependencies:
 * Python 3.8+
+* Nodejs 12.0.0+
 * `libsnappy-dev`
 
 ```
@@ -72,9 +73,9 @@ pip install -e .
 jupyter labextension install @jupyter-widgets/jupyterlab-manager plotlywidget
 jupyter labextension install jupyterlab-plotly
 jupyter labextension install @ryantam626/jupyterlab_code_formatter
-jupyter nbextension install --py hide_code
-jupyter nbextension enable --py hide_code
-jupyter serverextension enable --py hide_code
+jupyter nbextension install --user --py hide_code
+jupyter nbextension enable --user --py hide_code
+jupyter serverextension enable --user --py hide_code
 ```
 
 Download and prep the data:
