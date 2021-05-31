@@ -52,6 +52,7 @@ follow the following steps:
 
 Ubuntu system dependencies:
 * Python 3.8+
+* Nodejs 12.0.0+
 * `libsnappy-dev`
 
 ```
@@ -72,9 +73,9 @@ pip install -e .
 jupyter labextension install @jupyter-widgets/jupyterlab-manager plotlywidget
 jupyter labextension install jupyterlab-plotly
 jupyter labextension install @ryantam626/jupyterlab_code_formatter
-jupyter nbextension install --py hide_code
-jupyter nbextension enable --py hide_code
-jupyter serverextension enable --py hide_code
+jupyter nbextension install --user --py hide_code
+jupyter nbextension enable --user --py hide_code
+jupyter serverextension enable --user --py hide_code
 ```
 
 Download and prep the data:
