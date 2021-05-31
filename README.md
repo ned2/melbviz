@@ -42,7 +42,7 @@ This repo has been prepared to run on the wonderful
 This link will spin up a notebook in JupyterLab with all relevant dependencies
 installed and data downloaded ready to go for you to play around with.
 
-https://mybinder.org/v2/gh/ned2/melbviz/HEAD?urlpath=lab%2Ftree%2Fnotebooks%2Finteractive_data_viz.ipynb
+https://mybinder.org/v2/gh/ned2/melbviz/HEAD?urlpath=lab%2Ftree%2Fnotebooks%2Fworkshop_interactive_data_viz.ipynb
 
 
 ## Local Installation Instructions
