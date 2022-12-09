@@ -40,7 +40,7 @@ bokeh==2.4.2
     #   panel
 brotli==1.0.9
     # via flask-compress
-certifi==2021.10.8
+certifi==2022.12.7
     # via requests
 cffi==1.15.0
     # via argon2-cffi-bindings
@@ -96,6 +96,13 @@ idna==3.3
     # via
     #   anyio
     #   requests
+importlib-metadata==5.1.0
+    # via
+    #   flask
+    #   jupyterlab-server
+    #   markdown
+importlib-resources==5.10.1
+    # via jsonschema
 ipdb==0.13.9
     # via -r requirements.in
 ipykernel==6.13.0
@@ -421,7 +428,9 @@ traitlets==5.2.0
     #   notebook
     #   voila
 typing-extensions==4.2.0
-    # via bokeh
+    # via
+    #   black
+    #   bokeh
 urllib3==1.26.9
     # via requests
 visidata==2.8
@@ -442,6 +451,10 @@ werkzeug==2.1.2
     # via flask
 widgetsnbextension==3.6.0
     # via ipywidgets
+zipp==3.11.0
+    # via
+    #   importlib-metadata
+    #   importlib-resources
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
