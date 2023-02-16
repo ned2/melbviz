@@ -96,6 +96,13 @@ idna==3.3
     # via
     #   anyio
     #   requests
+importlib-metadata==6.0.0
+    # via
+    #   flask
+    #   jupyterlab-server
+    #   markdown
+importlib-resources==5.10.2
+    # via jsonschema
 ipdb==0.13.9
     # via -r requirements.in
 ipykernel==6.13.0
@@ -190,6 +197,7 @@ markupsafe==2.1.1
     # via
     #   jinja2
     #   nbconvert
+    #   werkzeug
 matplotlib==3.5.2
     # via
     #   -r requirements.in
@@ -421,7 +429,9 @@ traitlets==5.2.0
     #   notebook
     #   voila
 typing-extensions==4.2.0
-    # via bokeh
+    # via
+    #   black
+    #   bokeh
 urllib3==1.26.9
     # via requests
 visidata==2.8
@@ -438,10 +448,14 @@ websocket-client==1.3.2
     # via jupyter-server
 websockets==10.3
     # via voila
-werkzeug==2.1.2
+werkzeug==2.2.3
     # via flask
 widgetsnbextension==3.6.0
     # via ipywidgets
+zipp==3.13.0
+    # via
+    #   importlib-metadata
+    #   importlib-resources
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
