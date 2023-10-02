@@ -2,9 +2,9 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
-from .config import MAPBOX_KEY
+from .config import MELBVIZ_MAPBOX_KEY
 
-px.set_mapbox_access_token(MAPBOX_KEY)
+px.set_mapbox_access_token(MELBVIZ_MAPBOX_KEY)
 
 
 def plot_sensor_counts(df, title_func=None, **kwargs):

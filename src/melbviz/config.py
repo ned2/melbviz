@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 
 
-MAPBOX_KEY = os.getenv("MELBVIZ_MAPBOX_KEY")
+MELBVIZ_MAPBOX_KEY = os.getenv("MELBVIZ_MAPBOX_KEY")
 
 MELBVIZ_DATA_PATH = Path(os.getenv("MELBVIZ_DATA_PATH", Path.home() / "melbviz_data"))
 
