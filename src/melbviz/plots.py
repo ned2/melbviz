@@ -20,7 +20,7 @@ def plot_sensor_counts(df, title_func=None, **kwargs):
         .reset_index(name="Total Counts")
     )
     if "height" not in kwargs:
-        kwargs["height"] = max(18 * len(total_df), 500)
+        kwargs["height"] = max(18 * len(total_df), 600)
 
     figure = px.bar(
         total_df,
@@ -173,16 +173,16 @@ def plot_sensor_map(df, title_func=None, **kwargs):
         .agg(
             {
                 "Hourly_Counts": sum,
-                "latitude": lambda x: x.iloc[0],
-                "longitude": lambda x: x.iloc[0],
+                "Latitude": lambda x: x.iloc[0],
+                "Longitude": lambda x: x.iloc[0],
             }
         )
         .reset_index().rename(columns={"Hourly_Counts": "Total Counts"})
     )
     figure = px.scatter_mapbox(
         sensor_totals_df,
-        lat="latitude",
-        lon="longitude",
+        lat="Latitude",
+        lon="Longitude",
         color="Total Counts",
         size="Total Counts",
         text="Sensor_Name",
