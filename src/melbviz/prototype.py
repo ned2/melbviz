@@ -16,7 +16,7 @@ from .pedestrian import PedestrianDataset
 
 class PedestrianDemo(PedestrianDataset):
     """A prototype dashboard built using ipywidgets"""
-    
+
     def make_callback(self, plot_kind, **plot_params):
         """Make callback function for custom plot that can be filtered"""
         # get the func just to do validation
@@ -41,7 +41,7 @@ class PedestrianDemo(PedestrianDataset):
             title = "Melbourne CBD Pedestrian Traffic"
         if start_year is None:
             start_year = self.years[-1]
-            
+
         # inputs
         year_input = Dropdown(options=self.years, description="Year")
         month_input = Dropdown(description="Month")

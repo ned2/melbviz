@@ -16,14 +16,22 @@ def show_datasaurus(datasauraus_df, column):
         df = datasauraus_df
     else:
         df = datasauraus_df[datasauraus_df["dataset"] == column]
-    stats_df = pd.DataFrame({
-        "statistic": ["x_mean", "y_mean", "x_std", "y_std", "corr"],
-        "value": [
-            df["x"].mean(), df["y"].mean(), df["x"].std(), df["y"].std(), df["x"].corr(df["y"])
-        ],
-    })
+    stats_df = pd.DataFrame(
+        {
+            "statistic": ["x_mean", "y_mean", "x_std", "y_std", "corr"],
+            "value": [
+                df["x"].mean(),
+                df["y"].mean(),
+                df["x"].std(),
+                df["y"].std(),
+                df["x"].corr(df["y"]),
+            ],
+        }
+    )
     if column == "all":
-        fig = px.scatter(datasauraus_df, facet_col_wrap=5, facet_col="dataset", x="x", y="y")
+        fig = px.scatter(
+            datasauraus_df, facet_col_wrap=5, facet_col="dataset", x="x", y="y"
+        )
         fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
     else:
         fig = px.scatter(df, x="x", y="y")
@@ -40,5 +48,7 @@ def make_datasaurus(path="data/DatasaurusDozen.tsv"):
     datasauraus_df = pd.read_csv(path, delimiter="\t")
     columns = list(datasauraus_df["dataset"].unique())
     columns.append("all")
-    widget = interact(show_datasaurus, datasauraus_df=fixed(datasauraus_df), column=columns)
+    widget = interact(
+        show_datasaurus, datasauraus_df=fixed(datasauraus_df), column=columns
+    )
     return widget

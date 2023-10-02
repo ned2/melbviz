@@ -18,7 +18,6 @@ from .utils import (
 
 
 class PedestrianDataset:
-
     plot_func_map = {
         "sensor_counts": plots.plot_sensor_counts,
         "month_counts": plots.plot_month_counts,

@@ -4,7 +4,6 @@ import plotly.graph_objects as go
 
 from .config import MAPBOX_KEY
 
-
 px.set_mapbox_access_token(MAPBOX_KEY)
 
 
@@ -81,7 +80,12 @@ def plot_month_counts(df, split_sensors=False, title_func=None, **kwargs):
 
 
 def plot_sensor_traffic(
-    df, same_yscale=False, row_height=150, limit=5, title_func=None, **kwargs,
+    df,
+    same_yscale=False,
+    row_height=150,
+    limit=5,
+    title_func=None,
+    **kwargs,
 ):
     """Plot hourly traffic for one or more sensors"""
     if len(df) == 0:
@@ -124,7 +128,7 @@ def plot_sensor_traffic(
 
 def plot_year_traffic(df, same_yscale=False, row_height=150, title_func=None, **kwargs):
     """Plot traffic for a single sensor
-    Note: assumes the DataFrame has been filtered to a single sensor already. 
+    Note: assumes the DataFrame has been filtered to a single sensor already.
     """
     if len(df) == 0:
         return None
@@ -177,7 +181,8 @@ def plot_sensor_map(df, title_func=None, **kwargs):
                 "Longitude": lambda x: x.iloc[0],
             }
         )
-        .reset_index().rename(columns={"Hourly_Counts": "Total Counts"})
+        .reset_index()
+        .rename(columns={"Hourly_Counts": "Total Counts"})
     )
     figure = px.scatter_mapbox(
         sensor_totals_df,
