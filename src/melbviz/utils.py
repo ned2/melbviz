@@ -8,7 +8,8 @@ import pandas as pd
 
 def load_and_clean_pedestrian_data(counts_csv_path, sensor_csv_path=None):
     df = pd.read_csv(counts_csv_path).set_index("ID")
-    # Date_Time field previously had incorrect time so needed to reconstruct it.
+    # Date_Time field previously had incorrect time so we reconstruct it from
+    # other fields.
     # TODO: switch to loading as datetime by providing a parsing template
     df["Date_Time"] = pd.to_datetime(
         {
@@ -18,19 +19,11 @@ def load_and_clean_pedestrian_data(counts_csv_path, sensor_csv_path=None):
             "month": pd.to_datetime(df["Month"], format="%B").dt.month,
         }
     )
-    df["datetime_flat_year"] = pd.to_datetime(
-        {
-            "day": df["Mdate"],
-            "year": 2000,
-            "hour": df["Time"],
-            "month": pd.to_datetime(df["Month"], format="%B").dt.month,
-        }
-    )
     if sensor_csv_path is not None:
         geo_df = pd.read_csv(
-            sensor_csv_path, usecols=["sensor_id", "latitude", "longitude"]
+            sensor_csv_path, usecols=["Location_ID", "Latitude", "Longitude"]
         )
-        df = df.merge(geo_df, left_on="Sensor_ID", right_on="sensor_id")
+        df = df.merge(geo_df, left_on="Sensor_ID", right_on="Location_ID")
     df = df.sort_values("Date_Time")
     return df
 
@@ -100,7 +93,7 @@ def is_value(obj):
 
 def geocode_sensors(df):
     """Get a DataFrame of Sensor_Name,lat,long
-    
+
     This is done by appending "Melbourne, Australia" to sensor names and sending
     these location strings to Google Geocoding API to be geocoded.
 
